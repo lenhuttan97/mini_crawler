@@ -40,7 +40,7 @@ Khi bắt đầu một plan, cập nhật `Trạng thái`, ngày bắt đầu, o
 | Plan | Blocker hiện tại | Owner | Next action | Cập nhật lúc |
 |---|---|---|---|---|
 | P00 | Không có | — | Hoàn tất | 2026-11-08 |
-| P07–P08 | Docker daemon không khả dụng (`docker info` exit 1) → không chạy `docker compose`, không làm backup/restore drill thực tế trên PostgreSQL/MinIO, không chạy integration/E2E, không đo benchmark baseline thực tế. Release sign-off cần con người ký. | — | Khôi phục khi Docker sẵn sàng; hoặc khánh báo ranh giới_scope cho phần còn lại | 2026-11-08 |
+| P07–P08 | Docker daemon chạy nhưng không thể pull image từ Docker Hub (network timeout đến auth.docker.io:443). Không có image local → không thể `docker compose up`, không làm backup/restore drill thực tế trên PostgreSQL/MinIO, không chạy integration/E2E, không đo benchmark baseline thực tế. Release sign-off cần con người ký. | — | Khôi phục khi có kết nối Docker Hub hoặc image được sẵn sẵng local; hoặc khánh báo ranh giới_scope cho phần còn lại | 2026-11-08 |
 
 ## 5. Quy tắc dependency
 
