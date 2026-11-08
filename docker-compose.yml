@@ -1,0 +1,121 @@
+# Local development stack for Mini Crawler (P00 Item 4).
+#
+# Services: api, postgres, redis, minio, searxng.
+# Ports are bound to localhost only. Credentials below are dev-only samples;
+# copy .env.example to .env and change values before use. `.env` is git-ignored.
+#
+# Start:  docker compose up --build
+# Stop:   docker compose down
+# Health: docker compose ps  (all services should show "healthy")
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: mini_crawler_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-minicrawler}
+      POSTGRES_USER: ${POSTGRES_USER:-minicrawler}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - minicrawler_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-minicrawler} -d ${POSTGRES_DB:-minicrawler}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - minicrawler_internal
+
+  redis:
+    image: redis:7-alpine
+    container_name: mini_crawler_redis
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - minicrawler_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - minicrawler_internal
+
+  minio:
+    image: minio/minio:RELEASE.2023-10-26T20-17-06Z
+    container_name: mini_crawler_minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    command: server /data --console-address ":9001"
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - minicrawler_minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - minicrawler_internal
+
+  searxng:
+    image: searxng/searxng:latest
+    container_name: mini_crawler_searxng
+    environment:
+      SEARXNG_BASE_URL: http://127.0.0.1:8080/
+      SEARXNG_SECRET: ${SEARXNG_SECRET:-dev-secret-change-me}
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./infra/searxng/settings.yml:/etc/searxng/settings.yml:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks:
+      - minicrawler_internal
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    container_name: mini_crawler_api
+    environment:
+      APP_PROFILE: ${APP_PROFILE:-local}
+      APP_SECRET_KEY: ${APP_SECRET_KEY:-dev-secret-change-me}
+      APP_PORT: ${APP_PORT:-8000}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-minicrawler}:${POSTGRES_PASSWORD:-devpassword}@postgres:5432/${POSTGRES_DB:-minicrawler}
+      REDIS_URL: redis://redis:6379/0
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      SEARXNG_URL: http://searxng:8080
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      searxng:
+        condition: service_healthy
+    networks:
+      - minicrawler_internal
+
+volumes:
+  minicrawler_postgres_data:
+  minicrawler_redis_data:
+  minicrawler_minio_data:
+
+networks:
+  minicrawler_internal:
+    driver: bridge
