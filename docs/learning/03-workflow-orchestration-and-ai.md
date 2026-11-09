@@ -1,4 +1,48 @@
-# 04 — Trí tuệ nhân tạo, agent và kết nối AI client
+# 03 — Workflow orchestration, job lifecycle và AI sau MVP
+
+> **Status: Target architecture.** Trọng tâm hiện tại là `WorkflowRequest` → `WorkflowRun`/`WorkflowStep` → `JobIntent` → `FeatureJob` → typed result. `WorkflowOrchestrator` lập graph/budget/fan-out; `JobOrchestrationService` là nguồn sự thật duy nhất cho lifecycle; `QueueManagementService` sở hữu outbox/lease/retry/DLQ. Xem [`../platform/workflow-orchestration.md`](../platform/workflow-orchestration.md).
+>
+> LiteLLM, PydanticAI và MCP trong phần còn lại của học phần là **After MVP**: chúng không nằm trong dependency hiện tại và không được xem là runtime capability cho đến khi có quyết định product, dependency, authorization và approval flow.
+
+## Phần A — Workflow orchestration (học trước)
+
+### Mục tiêu phần A
+
+Bạn cần giải thích được vì sao một workflow không phải là một Celery task lớn, và vì sao một feature không tự gọi feature khác. Sau phần này, bạn phải phân biệt được:
+
+| Khái niệm | Câu hỏi nó trả lời | Owner |
+|---|---|---|
+| `WorkflowRequest` | Caller muốn kết quả gì: search, crawl một URL hay search rồi trích xuất? | Workflow Orchestration |
+| `WorkflowRun` / `WorkflowStep` | Workflow đang ở bước nào, còn budget/depth nào? | Workflow Orchestration |
+| `JobIntent` | Step này cần feature nào thực hiện với command nào? | Feature workflow coordinator |
+| `FeatureJob` | Một execution durable có idempotency, cancel và status nào? | Job Orchestration |
+| Lease/retry/DLQ | Message được giao và recover như thế nào? | Queue Management |
+| `ExecutionOutcome` | Feature đã completed, failed, blocked hay cancelled? | Feature service |
+
+```mermaid
+flowchart LR
+  Request[WorkflowRequest] --> Run[WorkflowRun]
+  Run --> Intent[JobIntent]
+  Intent --> Job[FeatureJob]
+  Job --> Queue[Queue Management]
+  Queue --> Worker[Feature worker]
+  Worker --> Outcome[Typed outcome]
+  Outcome --> Run
+```
+
+### Ba workflow MVP
+
+1. **`search`**: tạo một `SearchJob` và kết thúc bằng `SearchResultSet`; không crawl result.
+2. **`crawl_url`**: tạo một `WebCrawlJob`, revalidate Network Policy, static fetch, normalize/classify và trả `Document`.
+3. **`search_and_extract`**: caller yêu cầu rõ ràng; Search trả result set, selection rule đã đăng ký chọn tập result trong budget, rồi Workflow Orchestration tạo các Web Crawl `JobIntent` riêng.
+
+Không có bước nào cho phép Search worker tự enqueue crawl job. Retry/lease/DLQ cũng không thuộc Workflow Orchestration: workflow chỉ quan sát typed outcome để tiếp tục, partial-complete hoặc kết thúc.
+
+### Bài thực hành phần A
+
+Vẽ trên giấy hoặc Markdown một `search_and_extract` run cho tối đa ba URL: xác định `WorkflowRun`, các `WorkflowStep`, idempotency key, ba `FeatureJob` tối đa, terminal outcome của một URL bị `blocked_policy`, và aggregate result. So sánh bản vẽ với [`../platform/workflow-orchestration.md`](../platform/workflow-orchestration.md) trước khi đọc phần AI bên dưới.
+
+## Phần B — AI/MCP sau MVP
 
 > Học phần này dạy bạn cách dùng mô hình ngôn ngữ lớn (LLM) để trả lời dựa trên nội dung đã crawl, xây agent có công cụ rõ ràng, và kết nối AI client qua Model Context Protocol (MCP) sau khi MVP ổn định.
 
@@ -309,4 +353,4 @@ Agent phân tích nhu cầu
 
 ---
 
-**Khi hoàn thành học phần 04, hãy chuyển sang [05-video-discovery-and-download.md](05-video-discovery-and-download.md) để học về phát hiện và tải ảnh/video/audio.**
+**Khi hoàn thành học phần 03, hãy chuyển sang [04-media-workflows.md](04-media-workflows.md) để học về image/video workflows theo version roadmap.**

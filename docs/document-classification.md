@@ -1,6 +1,6 @@
 # Document Type Classification — MVP Specification
 
-> **Feature:** F01.5a — Document type classification  
+> **Feature:** Web Crawl Worker — document processing
 > **Phạm vi MVP:** nội dung HTML/JSON được chuyển thành Markdown; chưa hỗ trợ PDF, Office, presentation hoặc spreadsheet.
 
 ## 1. Mục tiêu
@@ -51,7 +51,11 @@ Sau khi crawl một URL được phép, hệ thống gán **một `document_type
 - Không log raw HTML, cookie, token hoặc URL query nhạy cảm làm classification evidence.
 - Dùng fixture HTML/JSON-LD do team kiểm soát; không cần gọi website bên ngoài trong unit/integration test.
 
-## 6. Acceptance criteria
+## 6. Ranh giới với media workflow
+
+**Classification does not trigger downloads.** `media_page` chỉ là nhãn phân loại; nó không tạo Image/Video candidate hay download job. Classification never creates a candidate or download job by itself. Candidate discovery chỉ xảy ra trong workflow media được caller yêu cầu rõ ràng, với ownership và budget theo [media candidate workflows](platform/media-candidate-workflows.md).
+
+## 7. Acceptance criteria
 
 - Classifier luôn trả đúng một type trong taxonomy cùng confidence/reason.
 - Caller hint được lưu riêng và không ép classifier chọn type.

@@ -1,4 +1,6 @@
-# 03 — Cơ sở dữ liệu, tác vụ nền và lưu trữ tệp
+# 02 — Cơ sở dữ liệu, tác vụ nền và lưu trữ tệp
+
+> **Status: Current repository + target architecture.** PostgreSQL, SQLAlchemy, Alembic, Redis, Celery và MinIO nằm trong stack hiện tại. `FeatureJob`, outbox, lease, retry/DLQ và cancellation là contract worker-first; đọc thêm [`../platform/job-orchestration.md`](../platform/job-orchestration.md) và [`../platform/queue-management.md`](../platform/queue-management.md). pgvector là **After MVP**, chỉ thêm sau benchmark/quyết định dependency.
 
 > Học phần này dạy bạn cách lưu trữ dữ liệu crawl, quản lý tác vụ nền (crawl, tải video) và lưu tệp lớn (HTML, Markdown, ảnh, video). Sau khi hoàn thành, bạn có thể xây dựng hệ thống lưu dữ liệu không bị trùng lặp và chạy tác vụ bên ngoài API.
 
@@ -489,4 +491,4 @@ Ràng buộc quan trọng: `canonical_url` và `content_hash` cần index để 
 
 ---
 
-**Khi hoàn thành học phần 03, hãy chuyển sang [04-llm-agent-and-mcp.md](04-llm-agent-and-mcp.md) để học về trí tuệ nhân tạo và kết nối AI client.**
+**Khi hoàn thành học phần 02, hãy chuyển sang [03-workflow-orchestration-and-ai.md](03-workflow-orchestration-and-ai.md) để học cách điều phối workflow và job lifecycle.**

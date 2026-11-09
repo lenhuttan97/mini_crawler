@@ -1,42 +1,47 @@
-# Ký duyệt phát hành (Release Sign-off) — Mini Crawler
+# Worker Release Sign-off
 
-Tài liệu này ghi lại quy trình kiểm duyệt và ký duyệt trước khi phát hành,
-theo Definition of Done trong [08-quality-security-release.md](plan/08-quality-security-release.md).
+> Chỉ ký duyệt khi các worker feature được triển khai thực tế đã có bằng chứng kiểm thử và rollout. Đây không phải API release checklist.
 
-## 1. Bảo mật (Security review sign-off)
-- [ ] SSRF: ma trận kiểm tra scheme, user-info, IPv4/IPv6/private/link-local, DNS multi-record/rebinding, redirect chain, cổng chính sách.
-- [ ] Nguồn chính sách: deny-by-default, chỉ nguồn `approved` mới được phép mạng, 증거 quyền phân phối.
-- [ ] Phân quyền: ma trận caller/tên thuê/tài nguyên, lưu trữ đối tượng riêng, presigned URL có TTL/quyền.
-- [ ] Log/trace/audit redaction: không thô réseau payload, token, cookie, signed URL, secret, nhãn URL cao cardinality.
-- [ ] Cách ly quá trình/mạng: trình duyệt, trình tải, FFmpeg, công nhân torrent có giới hạn CPU/RAM/disk/thời gian/mạng.
+## 1. Bảo mật
 
-Chủ sở hữu: ____________________  Ngày: ___________  Ký: ____________
+- [ ] Network Policy kiểm thử SSRF, DNS/redirect, allowlist, robots và quota cho feature áp dụng.
+- [ ] Image kiểm tra từng URL; Video có approved source, entitlement và DRM gate.
+- [ ] Browser/video process có sandbox, CPU/RAM/disk/time/network limits; không nhận credential, selector, JavaScript hay shell input từ job.
+- [ ] Log, trace, outbox, DLQ và audit không chứa URL query, token, cookie, signed URL hoặc raw capture.
 
-## 2. Sao lưu/phục hồi drill (Backup/restore drill)
-- [ ] Dump PostgreSQL / PITR đã được kiểm thử.
-- [ ] Phục hồi MinIO từ bản sao lưu đã được kiểm thử.
-- [ ] Bản ghi drilling đã được lưu và chủ sở hữu cảnh báo đã xác định.
+Owner: ____________________  Date: ___________  Signature: ____________
 
-Chủ sở hữu: ____________________  Ngày: ___________  Ký: ____________
+## 2. Sao lưu/phục hồi
 
-## 3. Benchmark và SLO/threshold
-- [ ] Cơ sở chuẩn benchmark đã được đo (bài viết tĩnh, bài viết JavaScript, media trực tiếp, batch ảnh, torrent mẫu).
-- [ ] Ngưỡng SLO đã được phê duyệt trong `app/core/slo.py`.
-- [ ] Chỉ tiêu độ trễ hàng đợi, thời lượng công việc, tỉ lệ thất bại, bộ nhớ trình duyệt, dung lượng tải xuống.
+- [ ] PostgreSQL job, lease, outbox, document/asset metadata backup và restore đã được kiểm thử.
+- [ ] Object storage document/asset restore đã được kiểm thử.
+- [ ] Restore drill xác minh không mất job state, audit hoặc result reference.
 
-Chủ sở hữu: ____________________  Ngày: ___________  Ký: ____________
+Owner: ____________________  Date: ___________  Signature: ____________
 
-## 4. Tính năng và rollback (Feature flag & rollback)
-- [ ] Không có vấn đề critical/high chưa giải quyết.
-- [ ] Bật/tắt tính năng đã được diễn tập.
-- [ ] Rollback bằng cách tắt tính năng/công nhân hàng đợi trước; không xóa dữ liệu/audit.
-- [ ] Migration rollback chỉ sau khi kiểm chứng tính tương thích dữ liệu.
+## 3. Benchmark và SLO
 
-Chủ sở hữu: ____________________  Ngày: ___________  Ký: ____________
+- [ ] Baseline được đo riêng cho Search, Web Crawl static/browser, Image batch và Video approved fixture.
+- [ ] SLO được phê duyệt cho queue age, publish lag, execution duration, error ratio, retry/DLQ rate và browser memory.
+- [ ] Concurrency, timeout và resource quota theo feature được benchmark và ghi nhận.
 
-## 5. Tài liệu và hạn chế đối với người dùng
-- [ ] API docs đã cập nhật đầy đủ.
-- [ ] Changelog đã cập nhật (`CHANGELOG.md`).
-- [ ] Hạn chế đối với người dùng đã được ghi rõ (trình duyệt dự phòng là stub, torrent chưa tải thật, Docker integration chưa chạy).
+Owner: ____________________  Date: ___________  Signature: ____________
 
-Chủ sở hữu: ____________________  Ngày: ___________  Ký: ____________
+## 4. Queue, rollout và rollback
+
+- [ ] Outbox/lease/retry/DLQ/cancellation được kiểm chứng với PostgreSQL + Redis/Celery thật.
+- [ ] Feature queues có consumer heartbeat, metrics, alert và runbook.
+- [ ] Rollback chỉ dừng feature consumer/flag; không xóa job, document, asset hoặc audit.
+- [ ] Requeue DLQ cần authorization/audit; không tự replay job.
+
+Owner: ____________________  Date: ___________  Signature: ____________
+
+## 5. Feature readiness
+
+- [ ] Search không auto-crawl.
+- [ ] Web Crawl revalidates policy trước network/redirect và browser fallback được kiểm soát.
+- [ ] Image có per-item quota, MIME/magic-byte validation và partial-result manifest.
+- [ ] Video chỉ source approved; DRM/policy block là terminal; torrent ngoài scope nếu chưa phê duyệt riêng.
+- [ ] Docs index, feature/platform contracts và runbooks được cập nhật.
+
+Owner: ____________________  Date: ___________  Signature: ____________

@@ -1,4 +1,6 @@
-# 05 — Phát hiện và tải ảnh/video/audio được phép
+# 04 — Phát hiện và tải ảnh/video/audio được phép
+
+> **Status: version-gated.** `extract_images` thuộc v1.1; `extract_video` thuộc v1.2. HTTP/policy/validation concepts dùng được ngay, nhưng Playwright, Crawl4AI, yt-dlp, FFmpeg và Pillow chưa là dependency hiện tại. Chỉ thêm chúng cùng reviewed source/recipe, sandbox, quota và controlled fixtures.
 
 > Học phần này dạy bạn cách phát hiện liên kết ảnh, video, âm thanh trong trang web, kiểm tra chính sách trước khi tải, và xử lý trường hợp link media chỉ xuất hiện sau khi tương tác với trình phát video. Tất cả chỉ áp dụng đối với nội dung bạn sở hữu hoặc được phép truy cập.
 
@@ -30,6 +32,15 @@ Không dùng các ví dụ dưới đây để truy cập nội dung không đư
 ---
 
 ## 1. Tổng quan: hai loại nguồn media
+
+Trước khi đi vào công cụ, hãy phân biệt hai workflow:
+
+| Workflow | Input | Ai discovery | Download |
+|---|---|---|---|
+| Direct URL | Một URL ảnh/video đã approved | Không có bước discovery | Feature tải trực tiếp sau policy/validation |
+| Page URL | Một URL trang | `extract_images` do Crawl Data trích static image evidence; `extract_video` do Video Download chạy approved recipe | Workflow chọn candidate trong budget rồi tạo download job |
+
+Page URL workflow là two-stage: Crawl Data persist `Document` trước; với ảnh, Crawl Data persist `ImageCandidateManifest`, còn với video, Video Download persist `VideoCandidateManifest` sau approved recipe. Workflow chọn candidate trong budget rồi tạo download job; result mang cả document và manifest reference. `.m3u8` là playlist HLS, không phải file `.mp4`; torrent/magnet là capability riêng, deferred, không thuộc Video Download. Contract đầy đủ ở [media candidate workflows](../platform/media-candidate-workflows.md).
 
 Trong trang web, media có thể xuất hiện theo hai cách:
 
@@ -412,4 +423,4 @@ Sau khi tải ảnh/video/audio, hãy lưu tệp vào MinIO (lưu trữ đối t
 
 ---
 
-**Khi hoàn thành học phần 05, hãy chuyển sang [06-observability-and-quality.md](06-observability-and-quality.md) để học về ghi log, theo dõi và kiểm thử chất lượng.**
+**Khi hoàn thành học phần 04, hãy chuyển sang [05-observability-and-quality.md](05-observability-and-quality.md) để học về ghi log, theo dõi và kiểm thử chất lượng.**

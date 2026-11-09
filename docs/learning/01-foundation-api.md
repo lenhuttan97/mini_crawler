@@ -1,5 +1,7 @@
 # 01 — Python, uv và API Foundation
 
+> **Status: Current repository.** Python 3.12, uv, Pydantic, FastAPI, Uvicorn và Docker Compose có trong baseline hiện tại. FastAPI là runtime/producer boundary chuyển tiếp; kiến trúc đích chạy workflow và worker không đặt HTTP controller trong worker repository. Xem [`../INDEX.md`](../INDEX.md).
+
 > Học phần này dành cho người chưa biết Python hoặc biết ít về xây dựng API. Sau khi hoàn thành, bạn có thể chạy một API an toàn, có kiểm tra sức khỏe và cấu hình không để lộ mật khẩu.
 
 ---
@@ -397,4 +399,4 @@ uv run pytest
 
 ---
 
-**Khi hoàn thành học phần 01, hãy chuyển sang [02-search-and-crawling.md](02-search-and-crawling.md) để tìm URL và lấy nội dung trang web.**
+**Khi hoàn thành học phần 01, hãy chuyển sang [02-data-jobs-and-storage.md](02-data-jobs-and-storage.md) để hiểu dữ liệu, queue và object storage trước khi thiết kế workflow.**

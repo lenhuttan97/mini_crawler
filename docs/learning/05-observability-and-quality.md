@@ -1,4 +1,6 @@
-# 06 — Quan sát hệ thống và chất lượng code
+# 05 — Quan sát hệ thống và chất lượng code
+
+> **Status: mixed.** structlog, pytest, pytest-asyncio, respx và Ruff có trong repository hiện tại. OpenTelemetry và Prometheus là **After MVP** cho đến khi dependency, runtime wiring và metrics contracts được thêm; không mô tả chúng như telemetry đang hoạt động.
 
 > Học phần này dạy bạn cách ghi log có mã yêu cầu (correlation ID), theo dõi truy vết (tracing), đo lường số liệu (metrics), viết kiểm thử tự động mà không gọi mạng thật, và duy trì chất lượng mã nguồn bằng Ruff.
 
@@ -392,4 +394,4 @@ Không bao giờ viết code production trước khi có test thất bại.
 
 ---
 
-**Bạn đã hoàn tất toàn bộ 6 học phần của bộ tài liệu học Mini Crawler. Hãy quay lại [`../mini_crawler_implementation_plan.md`](../mini_crawler_implementation_plan.md) để bắt đầu triển khai MVP theo từng giai đoạn (Phase 0 → Phase 6).**
+**Khi hoàn thành học phần 05, hãy chuyển sang [06-search-and-crawling.md](06-search-and-crawling.md) để dùng toàn bộ nền tảng workflow, policy và quality vào capstone Search & Crawl.**

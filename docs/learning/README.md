@@ -1,7 +1,8 @@
-# Lộ trình học Technology cho Mini Crawler — từ người mới đến nâng cao
+# Lộ trình học Mini Crawler — từ Beginner đến Master
 
-> Bộ tài liệu này chuyển các lựa chọn kỹ thuật trong [`../mini_crawler_implementation_plan.md`](../mini_crawler_implementation_plan.md) thành lộ trình học chi tiết.  
-> Mục tiêu: bạn không cần biết trước các công nghệ này. Học xong từng phần, bạn có thể tự làm bài thực hành nhỏ, giải thích được quyết định kỹ thuật, rồi mới tham gia xây dựng MVP an toàn.  
+> Đây là curriculum, không phải implementation contract. Contract hiện hành nằm ở [`../INDEX.md`](../INDEX.md); kiến trúc workflow/job nằm ở [`../platform/workflow-orchestration.md`](../platform/workflow-orchestration.md) và [`../platform/job-orchestration.md`](../platform/job-orchestration.md).
+>
+> Mỗi học phần gắn một trong ba nhãn: **Current repository** (dependency/runtime có trong `pyproject.toml`), **Target architecture** (contract đã thiết kế nhưng chưa là runtime hoàn chỉnh), hoặc **After MVP** (cần dependency/approval riêng).
 > Tất cả bài thực hành chỉ dùng target bạn sở hữu hoặc được phép truy cập; không vượt DRM, CAPTCHA, paywall hay kiểm soát truy cập.
 
 ---
@@ -10,21 +11,21 @@
 
 | Bước | Nội dung | Công nghệ chính | Kết quả cần đạt |
 |:---|:---|:---|:---|
-| 1 | [01-foundation-api.md](01-foundation-api.md) | Python, uv, FastAPI, Uvicorn, Pydantic, Docker Compose | Chạy được API có kiểm tra sức khỏe, cấu hình an toàn và test đơn vị. |
-| 2 | [02-search-and-crawling.md](02-search-and-crawling.md) | SearXNG, HTTPX, selectolax, markdownify, Crawl4AI, Playwright | Tìm URL, lấy trang HTML tĩnh, xử lý trang cần JavaScript. |
-| 3 | [03-data-jobs-and-storage.md](03-data-jobs-and-storage.md) | PostgreSQL, SQLAlchemy, Alembic, pgvector, Redis, Celery, MinIO | Lưu dữ liệu, job và tệp nhị phân mà không trùng lặp. |
-| 4 | [04-llm-agent-and-mcp.md](04-llm-agent-and-mcp.md) | LiteLLM, PydanticAI, Model Context Protocol | Trả lời có dẫn nguồn; kết nối AI client sau MVP. |
-| 5 | [05-video-discovery-and-download.md](05-video-discovery-and-download.md) | Playwright, Crawl4AI network capture, yt-dlp, FFmpeg, HTTPX, Pillow | Phát hiện và tải ảnh/video/audio từ nguồn được phép. |
-| 6 | [06-observability-and-quality.md](06-observability-and-quality.md) | structlog, OpenTelemetry, Prometheus, pytest, respx, Ruff | Ghi log, theo dõi, đo lường và kiểm thử mà không gọi mạng thật. |
+| 1 | [01-foundation-api.md](01-foundation-api.md) | Python, uv, FastAPI, Uvicorn, Pydantic, Docker Compose | **Current:** chạy baseline và hiểu FastAPI là producer/runtime chuyển tiếp, không phải target worker entrypoint. |
+| 2 | [02-data-jobs-and-storage.md](02-data-jobs-and-storage.md) | PostgreSQL, SQLAlchemy, Alembic, Redis, Celery, MinIO | **Current:** persistence, queue và object storage; pgvector là **After MVP**. |
+| 3 | [03-workflow-orchestration-and-ai.md](03-workflow-orchestration-and-ai.md) | WorkflowRun, FeatureJob, outbox, lease, retry/DLQ | **Target:** điều phối workflow/job; AI/MCP là **After MVP**. |
+| 4 | [04-media-workflows.md](04-media-workflows.md) | HTTPX, policy, MIME/magic bytes, approved recipes | **v1.1/v1.2:** direct URL và page URL media workflows; browser/yt-dlp/FFmpeg cần dependency và review riêng. |
+| 5 | [05-observability-and-quality.md](05-observability-and-quality.md) | structlog, pytest, respx, Ruff | **Current:** quality/testing; tracing/metrics full là **After MVP**. |
+| 6 | [06-search-and-crawling.md](06-search-and-crawling.md) | SearXNG, HTTPX, selectolax, markdownify | **Capstone:** search/static crawl/classification; browser tools là **After MVP**. |
 
 ## Từ người mới đến Master
 
 | Cấp độ | Học phần | Bạn có thể làm được |
 |:---|:---|:---|
-| **Beginner** | 01–02 | Chạy API local, gửi request HTTP an toàn, phân biệt HTML tĩnh và trang cần JavaScript. |
-| **Intermediate** | 03 | Lưu job/tài liệu, chạy worker nền, hiểu migration, cache và object storage. |
-| **Advanced** | 04–05 | Xây RAG có nguồn, agent theo quyền tối thiểu, pipeline media có policy rõ ràng. |
-| **Master** | 06 và benchmark thực tế | Quan sát, kiểm thử, đo độ tin cậy/hiệu năng và quyết định mở rộng dựa trên số liệu. |
+| **Beginner** | 01 | Chạy baseline local, hiểu config, request validation và test. |
+| **Intermediate** | 02 | Lưu job/tài liệu, chạy worker nền, hiểu migration, queue và object storage. |
+| **Advanced** | 03–04 | Thiết kế workflow/job và pipeline media có policy rõ ràng. |
+| **Master** | 05–06 và benchmark thực tế | Quan sát, kiểm thử, rồi áp dụng toàn bộ kiến thức vào search-and-extract an toàn. |
 
 > **Quy tắc tiến cấp:** chỉ sang phần tiếp theo khi bạn tự chạy được bài thực hành, giải thích được vì sao có giới hạn an toàn, và làm được checklist của phần hiện tại. “Đọc xong” không đồng nghĩa “đã biết”.
 

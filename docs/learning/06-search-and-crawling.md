@@ -1,4 +1,6 @@
-# 02 — Tìm kiếm URL và cào dữ liệu trang web
+# 06 — Search & Crawl Capstone
+
+> **Status: Current repository + target architecture.** Đây là capstone cuối lộ trình: SearXNG, HTTPX, selectolax và markdownify kết hợp với workflow/job/policy đã học. Crawl4AI/Playwright chỉ là **After MVP**: chỉ dùng khi dependency, reviewed recipe, sandbox và policy được phê duyệt. Search độc lập không auto-crawl; chỉ workflow `search_and_extract` explicit mới tạo crawl job có budget.
 
 > Học phần này dạy bạn cách tìm URL trên Internet, lấy nội dung trang HTML tĩnh và xử lý trang cần JavaScript. Sau khi hoàn thành, bạn có thể biến một từ khóa tìm kiếm thành danh sách URL, rồi đưa nội dung trang về định dạng Markdown cho LLM.
 
@@ -362,6 +364,8 @@ Thử lấy bằng HTTPX (trang HTML tĩnh)
      Kết quả Markdown từ Crawl4AI → lưu cùng cách trên
 ```
 
+**Classification does not trigger downloads.** `document_type` (kể cả `media_page`) chỉ chọn cách xử lý/lưu document. Nó không tự tạo image/video candidate hay download job; page-driven media chỉ chạy trong workflow `extract_images`/`extract_video` được caller yêu cầu rõ ràng. Xem [media candidate workflows](../platform/media-candidate-workflows.md).
+
 ---
 
 ## 9. Bài thực hành
@@ -419,4 +423,4 @@ Thử lấy bằng HTTPX (trang HTML tĩnh)
 
 ---
 
-**Khi hoàn thành học phần 02, hãy chuyển sang [03-data-jobs-and-storage.md](03-data-jobs-and-storage.md) để lưu dữ liệu và chạy tác vụ nền.**
+**Bạn đã hoàn tất toàn bộ 6 học phần. Hãy quay lại [`../INDEX.md`](../INDEX.md) để đọc active worker contracts, chọn workflow/version roadmap phù hợp và bắt đầu triển khai theo evidence/test.**
