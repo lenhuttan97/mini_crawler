@@ -24,10 +24,11 @@ from app.platform.persistence.models import CrawlJob, Job
 def process_crawl_job(session: Session, job_id: str, crawl_service=None) -> str | None:
     """Xử lý một crawl job: claim → crawl → complete/fail."""
     job = session.get(Job, job_id)
-    if job is None or job.status != JobStatus.PENDING.value:
+    if job is None or job.status not in (JobStatus.PENDING.value, JobStatus.QUEUED.value):
         return None
-    job.status = JobStatus.QUEUED.value
-    session.flush()
+    if job.status == JobStatus.PENDING.value:
+        job.status = JobStatus.QUEUED.value
+        session.flush()
 
     crawl_job = session.get(CrawlJob, job_id)
     if crawl_job is None:
@@ -38,6 +39,8 @@ def process_crawl_job(session: Session, job_id: str, crawl_service=None) -> str 
     if crawl_service is None:
         raise ValueError("crawl_service là bắt buộc để xử lý crawl job")
 
+    job.status = JobStatus.RUNNING.value
+    session.flush()
     try:
         asyncio.run(
             crawl_service.crawl(

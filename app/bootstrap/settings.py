@@ -36,6 +36,11 @@ class Settings(BaseSettings):
         default=None,
         validation_alias=AliasChoices("APP_SEARCH_ENABLED", "SEARCH_ENABLED"),
     )
+    local_worker_poll_seconds: float = Field(
+        default=1.0,
+        gt=0,
+        validation_alias=AliasChoices("APP_LOCAL_WORKER_POLL_SECONDS", "LOCAL_WORKER_POLL_SECONDS"),
+    )
     database_url: str = Field(
         default="postgresql+psycopg://minicrawler:devpassword@localhost:5432/minicrawler",
         validation_alias=AliasChoices("DATABASE_URL", "APP_DATABASE_URL"),
