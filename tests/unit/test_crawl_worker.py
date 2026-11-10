@@ -14,7 +14,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import Base, CrawlJob, Job
-from app.workers.tasks import process_crawl_job
+from app.features.web_crawl.worker.task import process_crawl_job
 
 
 @pytest.fixture
@@ -100,7 +100,7 @@ def test_process_crawl_job_marks_failed_on_error(db_session) -> None:
 
 def test_execute_crawl_job_loads_its_session_from_job_id(db_session) -> None:
     """Celery payload is only job_id; task creates its own session and service."""
-    from app.workers.tasks import execute_crawl_job
+    from app.features.web_crawl.worker.task import execute_crawl_job
 
     _make_job(db_session, status="pending")
     session_factory = lambda: db_session

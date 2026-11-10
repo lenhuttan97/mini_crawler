@@ -12,7 +12,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from app.services.crawl_service import CrawlService
+from app.features.web_crawl.application.service import CrawlService
 
 
 def _make_service():

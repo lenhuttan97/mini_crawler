@@ -14,7 +14,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.platform.persistence.models import Base, Document
-from app.services.persistence import PersistenceResult, PersistenceService
+from app.platform.document_storage.service import PersistenceResult, PersistenceService
 
 
 @pytest.fixture

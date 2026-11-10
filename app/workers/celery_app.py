@@ -31,13 +31,14 @@ def create_celery_app(settings: Settings | None = None) -> Celery:
 
     # Ánh xạ task vào queue (P01 §5.4: tách queue để giới hạn tài nguyên riêng).
     app.conf.task_routes = {
-        "app.workers.tasks.claim_job": {"queue": "crawl"},
-        "app.workers.tasks.complete_job": {"queue": "crawl"},
-        "app.workers.tasks.fail_job": {"queue": "crawl"},
-        "app.workers.tasks.execute_crawl_job": {"queue": "crawl"},
+        "app.platform.queue_management.tasks.claim_job": {"queue": "crawl"},
+        "app.platform.queue_management.tasks.complete_job": {"queue": "crawl"},
+        "app.platform.queue_management.tasks.fail_job": {"queue": "crawl"},
+        "app.features.web_crawl.worker.task.process_crawl_job": {"queue": "crawl"},
+        "app.features.web_crawl.worker.task.execute_crawl_job": {"queue": "crawl"},
         "app.workers.media_tasks.execute_media_job": {"queue": "media"},
         "app.workers.torrent_worker.execute_torrent_job": {"queue": "torrent"},
-        "app.workers.tasks.maintenance_job": {"queue": "maintenance"},
+        "app.platform.queue_management.tasks.maintenance_job": {"queue": "maintenance"},
     }
 
     # Giới hạn thời gian và hành vi worker.

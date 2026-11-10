@@ -12,7 +12,7 @@ import httpx
 import pytest
 import respx
 
-from app.adapters.static_fetcher import FetchError, FetchResult, StaticFetcher
+from app.features.web_crawl.infrastructure.static_fetcher import FetchError, FetchResult, StaticFetcher
 
 
 def _run(coro):
@@ -103,7 +103,7 @@ def test_fetch_redirect_to_private_ip_blocked(monkeypatch: pytest.MonkeyPatch) -
 
     # Chặn mọi redirect qua Policy Gate
     monkeypatch.setattr(
-        "app.adapters.static_fetcher.evaluate_policy",
+        "app.features.web_crawl.infrastructure.static_fetcher.evaluate_policy",
         lambda cmd: PolicyDecision(False, "ssrf_private_ip", "private redirect"),
     )
 

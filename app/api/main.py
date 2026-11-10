@@ -12,7 +12,7 @@ from app.api.routers import crawl_jobs, documents, health, jobs, media_jobs, sea
 from app.bootstrap.database import create_session_factory
 from app.bootstrap.settings import Settings
 from app.platform.observability.logging import configure_logging, get_logger
-from app.services.crawl_submission import CrawlJobSubmitter
+from app.features.web_crawl.application.submission import CrawlJobSubmitter
 from app.services.media_submission import MediaJobSubmitter
 from app.services.search_service import SearchService
 from app.workers.celery_app import create_celery_app
@@ -36,7 +36,7 @@ def create_app(
 
         def enqueue_crawl_job(job_id: str) -> None:
             task_app.send_task(
-                "app.workers.tasks.execute_crawl_job",
+                "app.features.web_crawl.worker.task.execute_crawl_job",
                 args=[job_id],
                 queue="crawl",
             )

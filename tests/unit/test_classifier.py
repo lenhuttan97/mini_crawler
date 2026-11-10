@@ -7,7 +7,7 @@ classifier. Không gọi mạng thật.
 
 from __future__ import annotations
 
-from app.services.classifier import DocumentClassifier
+from app.features.web_crawl.application.classifier import DocumentClassifier
 
 
 def test_news_article_from_json_ld_article() -> None:

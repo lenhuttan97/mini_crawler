@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.adapters.browser_fetcher import BrowserFetcher, FetchResult
+from app.features.web_crawl.infrastructure.browser_fetcher import BrowserFetcher, FetchResult
 
 
 def test_browser_fetcher_returns_fixture_content(tmp_path) -> None:

@@ -13,7 +13,7 @@ from app.platform.persistence.models import Base, CrawlJob, Job
 
 def test_submit_persists_crawl_job_before_enqueuing(tmp_path) -> None:
     """Queue receives only a committed job ID, never a URL or a live session."""
-    from app.services.crawl_submission import CrawlJobSubmitter
+    from app.features.web_crawl.application.submission import CrawlJobSubmitter
 
     engine = create_engine(f"sqlite:///{tmp_path / 'submission.db'}", future=True)
     Base.metadata.create_all(engine)
@@ -40,7 +40,7 @@ def test_submit_persists_crawl_job_before_enqueuing(tmp_path) -> None:
 
 def test_submit_is_idempotent_and_does_not_enqueue_twice(tmp_path) -> None:
     """The existing caller/idempotency job is returned without a duplicate task."""
-    from app.services.crawl_submission import CrawlJobSubmitter
+    from app.features.web_crawl.application.submission import CrawlJobSubmitter
 
     engine = create_engine(f"sqlite:///{tmp_path / 'idempotency.db'}", future=True)
     Base.metadata.create_all(engine)

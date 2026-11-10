@@ -7,7 +7,7 @@ Markdown và tính content hash.
 
 from __future__ import annotations
 
-from app.services.normalizer import normalize_html
+from app.features.web_crawl.application.normalizer import normalize_html
 
 NEWS_ARTICLE_HTML = """<!DOCTYPE html>
 <html>

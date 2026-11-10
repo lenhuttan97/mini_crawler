@@ -8,7 +8,7 @@ không cần broker Redis thật.
 from __future__ import annotations
 
 from app.workers.celery_app import celery_app
-from app.workers.tasks import claim_job, complete_job, fail_job
+from app.platform.queue_management.tasks import claim_job, complete_job, fail_job
 
 
 def test_celery_app_has_queues() -> None:
@@ -32,10 +32,10 @@ def test_celery_factory_uses_typed_redis_setting() -> None:
 def test_celery_task_routes() -> None:
     """Task route ánh xạ task vào queue tương ứng."""
     routes = celery_app.conf.task_routes
-    assert routes.get("app.workers.tasks.claim_job") == {"queue": "crawl"}
-    assert routes.get("app.workers.tasks.complete_job") == {"queue": "crawl"}
-    assert routes.get("app.workers.tasks.fail_job") == {"queue": "crawl"}
-    assert routes.get("app.workers.tasks.maintenance_job") == {"queue": "maintenance"}
+    assert routes.get("app.platform.queue_management.tasks.claim_job") == {"queue": "crawl"}
+    assert routes.get("app.platform.queue_management.tasks.complete_job") == {"queue": "crawl"}
+    assert routes.get("app.platform.queue_management.tasks.fail_job") == {"queue": "crawl"}
+    assert routes.get("app.platform.queue_management.tasks.maintenance_job") == {"queue": "maintenance"}
 
 
 def test_celery_time_limits() -> None:

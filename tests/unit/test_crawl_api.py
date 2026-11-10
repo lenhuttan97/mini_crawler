@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 
 from app.api.main import create_app
 from app.bootstrap.settings import Settings
-from app.services.crawl_submission import CrawlJobSubmitter
+from app.features.web_crawl.application.submission import CrawlJobSubmitter
 
 
 @dataclass(frozen=True)
