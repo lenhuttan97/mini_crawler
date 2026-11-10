@@ -59,9 +59,7 @@ def test_local_storage_rejects_symlink_escape(tmp_path) -> None:
 def test_local_storage_deletes_and_reports_missing_objects(tmp_path) -> None:
     """Delete is idempotent, while a missing read is a typed storage failure."""
     storage = LocalStorageAdapter(tmp_path)
-    storage.upload_object(
-        bucket="documents", key="one", data=b"x", content_type="text/plain"
-    )
+    storage.upload_object(bucket="documents", key="one", data=b"x", content_type="text/plain")
 
     storage.delete_object(bucket="documents", key="one")
     storage.delete_object(bucket="documents", key="one")

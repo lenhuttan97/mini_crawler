@@ -2,7 +2,7 @@
 
 > This Compose stack starts the current API-centric development baseline: `api`, PostgreSQL, Redis, MinIO and SearXNG. It does **not** by itself start or validate the target worker-first workflow architecture described in [docs/INDEX.md](docs/INDEX.md).
 
-Prerequisites: `uv` (installed), Docker + Docker Compose.
+Prerequisites: `uv` (installed). Docker + Docker Compose are required only for the Compose stack below.
 
 ## 1. Configure environment
 
@@ -44,6 +44,42 @@ Passing these checks confirms only the current Compose services. For target work
 ```bash
 docker compose down
 ```
+
+## Run without Docker (local modes)
+
+These modes run FastAPI with SQLite and a local object directory. They need no Redis/Celery, MinIO or SearXNG. Create the SQLite schema explicitly before the first run; API startup never creates tables.
+
+```bash
+export APP_RUNTIME_MODE=inline
+export DATABASE_URL=sqlite:///./.runtime/local.db
+export APP_LOCAL_STORAGE_PATH=./.runtime/objects
+
+uv run python -m app.entrypoints.local_bootstrap
+uv run uvicorn app.legacy_api.main:create_app --factory --reload
+```
+
+`inline` waits for crawl/image work to finish before responding, so it returns `200` with the persisted terminal status and can hit HTTP timeouts on slow remote work.
+
+For the asynchronous, DB-backed variant, run the API and one worker process with the same database and storage path:
+
+```bash
+# Terminal 1: API
+export APP_RUNTIME_MODE=db-worker
+export DATABASE_URL=sqlite:///./.runtime/local.db
+export APP_LOCAL_STORAGE_PATH=./.runtime/objects
+uv run python -m app.entrypoints.local_bootstrap
+uv run uvicorn app.legacy_api.main:create_app --factory --reload
+
+# Terminal 2: worker
+export APP_RUNTIME_MODE=db-worker
+export DATABASE_URL=sqlite:///./.runtime/local.db
+export APP_LOCAL_STORAGE_PATH=./.runtime/objects
+uv run python -m app.entrypoints.database_worker
+```
+
+`db-worker` returns `202` with a pending job. Run exactly one worker process: it has no lease, outbox, retry or DLQ guarantee, and concurrent workers are unsupported. Use `APP_LOCAL_WORKER_POLL_SECONDS` to change its idle poll interval (default `1.0`).
+
+Local modes disable Search by default. To enable it, set `APP_SEARCH_ENABLED=true` and point `SEARXNG_URL` at a reachable provider; otherwise `/v1/search` and `/v1/search/crawl-selected` return `503`. Direct crawl and media submission still work. `broker` mode remains the Docker/production path and uses the existing PostgreSQL, Redis/Celery and MinIO services.
 
 ## 5. Run the quality gate (offline, no network)
 

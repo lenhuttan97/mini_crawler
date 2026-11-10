@@ -34,4 +34,11 @@ Read the active contracts and runbooks in [docs/INDEX.md](docs/INDEX.md). Histor
 
 The current Docker Compose stack still starts the existing `api`, PostgreSQL, Redis, MinIO and SearXNG services. It is a local baseline during the transition; it does not by itself prove that the target worker-first workflow architecture is running.
 
+For development without Docker, two local runtime modes use SQLite and a filesystem object directory instead of PostgreSQL, Redis/Celery, MinIO or SearXNG:
+
+- `APP_RUNTIME_MODE=inline` executes crawl and image work inside the API request.
+- `APP_RUNTIME_MODE=db-worker` persists jobs and lets a separate DB-polling worker execute them.
+
+Local modes are single-process development runtimes. They do not provide the target outbox, lease, retry or DLQ guarantees, and Search is unavailable unless a provider is explicitly enabled. The default `broker` mode and the Compose stack are unchanged.
+
 See [STARTUP.md](STARTUP.md) for commands and health checks.
