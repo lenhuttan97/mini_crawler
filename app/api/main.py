@@ -14,7 +14,7 @@ from app.bootstrap.settings import Settings
 from app.platform.observability.logging import configure_logging, get_logger
 from app.features.web_crawl.application.submission import CrawlJobSubmitter
 from app.services.media_submission import MediaJobSubmitter
-from app.services.search_service import SearchService
+from app.features.search.application.service import SearchService
 from app.workers.celery_app import create_celery_app
 
 _logger = get_logger(__name__)

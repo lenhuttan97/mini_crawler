@@ -14,7 +14,7 @@ import httpx
 import pytest
 import respx
 
-from app.services.search_service import (
+from app.features.search.application.service import (
     SearchQueryError,
     SearchService,
     SearchUpstreamError,
