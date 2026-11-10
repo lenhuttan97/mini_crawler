@@ -10,7 +10,7 @@ from pathlib import Path
 
 from app.platform.observability.alerts import ALERT_RULES
 
-RUNBOOKS_DIR = Path(__file__).resolve().parents[2] / "docs" / "runbooks"
+RUNBOOKS_DIR = Path(__file__).resolve().parents[4] / "docs" / "runbooks"
 
 
 def test_alert_rules_defined_with_owner_and_runbook() -> None:
