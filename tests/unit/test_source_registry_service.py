@@ -5,8 +5,8 @@ from __future__ import annotations
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.domain.enums import SourceStatus
-from app.domain.models import Base
+from app.platform.persistence.enums import SourceStatus
+from app.platform.persistence.models import Base
 
 
 def test_durable_registry_requires_approved_source_and_enabled_feature(tmp_path) -> None:

@@ -13,7 +13,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.domain.models import Base, Document
+from app.platform.persistence.models import Base, Document
 from app.services.persistence import PersistenceResult, PersistenceService
 
 

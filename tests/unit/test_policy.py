@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 import pytest
 
-from app.core.policy import PolicyCommand, evaluate_policy
+from app.platform.network_policy.policy import PolicyCommand, evaluate_policy
 
 
 def test_allowed_http_and_https() -> None:
@@ -80,7 +80,7 @@ def test_blocked_private_ipv6() -> None:
 def test_blocked_localhost_hostname(monkeypatch: pytest.MonkeyPatch) -> None:
     """Hostname 'localhost' phân giải về loopback => bị chặn."""
     with patch(
-        "app.core.policy.socket.getaddrinfo",
+        "app.platform.network_policy.policy.socket.getaddrinfo",
         return_value=[(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 80))],
     ):
         decision = evaluate_policy(
@@ -107,7 +107,7 @@ def test_blocked_redirect_to_private_ip() -> None:
 def test_allowed_public_domain() -> None:
     """Tên miền công khai không trỏ IP private được phép."""
     with patch(
-        "app.core.policy.socket.getaddrinfo",
+        "app.platform.network_policy.policy.socket.getaddrinfo",
         return_value=[(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 80))],
     ):
         decision = evaluate_policy(

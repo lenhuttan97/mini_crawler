@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from sqlalchemy import text
 
-from app.core.settings import Settings
+from app.bootstrap.settings import Settings
 
 
 def test_session_factory_uses_configured_database_url(tmp_path) -> None:
     """A factory creates sessions against the injected database URL on demand."""
-    from app.core.database import create_session_factory
+    from app.bootstrap.database import create_session_factory
 
     settings = Settings(database_url=f"sqlite:///{tmp_path / 'runtime.db'}")
     session_factory = create_session_factory(settings)

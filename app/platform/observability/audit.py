@@ -12,7 +12,7 @@ from typing import Any
 import structlog
 from sqlalchemy.orm import Session
 
-from app.domain.models import AuditEvent
+from app.platform.persistence.models import AuditEvent
 
 
 class AuditService:

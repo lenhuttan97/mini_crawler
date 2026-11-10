@@ -5,8 +5,8 @@ from __future__ import annotations
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.domain.models import AuditEvent, Base
-from app.services.audit import AuditService
+from app.platform.persistence.models import AuditEvent, Base
+from app.platform.observability.audit import AuditService
 
 
 def test_audit_service_records_event_without_secret(tmp_path) -> None:

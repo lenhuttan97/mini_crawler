@@ -96,7 +96,7 @@ def test_fetch_follows_redirect_manually() -> None:
 
 def test_fetch_redirect_to_private_ip_blocked(monkeypatch: pytest.MonkeyPatch) -> None:
     """Redirect về IP private bị chặn (Policy Gate kiểm tra mỗi hop)."""
-    from app.core.policy import PolicyDecision
+    from app.platform.network_policy.policy import PolicyDecision
 
     fetcher = StaticFetcher(max_bytes=1_000_000)
     start = "https://example.com/start"

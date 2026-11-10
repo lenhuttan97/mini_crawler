@@ -14,10 +14,10 @@ import hashlib
 from typing import Any
 from urllib.parse import urlsplit
 
-from app.core.database import create_session_factory
-from app.core.settings import Settings
-from app.domain.enums import JobStatus
-from app.domain.models import MediaAsset, MediaJob, MediaJobItem
+from app.bootstrap.database import create_session_factory
+from app.bootstrap.settings import Settings
+from app.platform.persistence.enums import JobStatus
+from app.platform.persistence.models import MediaAsset, MediaJob, MediaJobItem
 from app.services.source_registry import SourceRegistry
 from app.workers.celery_app import celery_app
 

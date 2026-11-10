@@ -12,7 +12,7 @@ from urllib.parse import urljoin
 
 import httpx
 
-from app.core.policy import PolicyCommand, evaluate_policy
+from app.platform.network_policy.policy import PolicyCommand, evaluate_policy
 
 
 class FetchError(Exception):

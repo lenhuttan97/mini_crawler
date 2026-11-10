@@ -6,8 +6,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from app.domain.models import CrawlJob
-from app.services.jobs import JobService
+from app.platform.persistence.models import CrawlJob
+from app.platform.job_orchestration.service import JobService
 
 
 @dataclass(frozen=True)

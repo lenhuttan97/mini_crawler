@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.domain.enums import (
+from app.platform.persistence.enums import (
     JobStatus,
     JobType,
     PolicyDecision,

@@ -11,8 +11,8 @@ import uuid
 from dataclasses import dataclass
 from typing import Any
 
-from app.core.policy import PolicyCommand, PolicyGate
-from app.domain.models import MediaJob, MediaJobItem
+from app.platform.network_policy.policy import PolicyCommand, PolicyGate
+from app.platform.persistence.models import MediaJob, MediaJobItem
 
 
 class MediaQuotaExceeded(Exception):

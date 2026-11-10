@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.domain.enums import SourceStatus
-from app.domain.models import SourceRegistryEntry
+from app.platform.persistence.enums import SourceStatus
+from app.platform.persistence.models import SourceRegistryEntry
 
 
 class SourceRegistryService:

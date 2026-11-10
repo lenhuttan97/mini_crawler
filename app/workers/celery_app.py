@@ -9,7 +9,7 @@ from __future__ import annotations
 from celery import Celery
 from kombu import Queue
 
-from app.core.settings import Settings
+from app.bootstrap.settings import Settings
 
 
 def create_celery_app(settings: Settings | None = None) -> Celery:

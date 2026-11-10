@@ -12,9 +12,9 @@ from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.core.policy import PolicyCommand, evaluate_policy
-from app.domain.enums import JobStatus
-from app.domain.models import Job
+from app.platform.network_policy.policy import PolicyCommand, evaluate_policy
+from app.platform.persistence.enums import JobStatus
+from app.platform.persistence.models import Job
 
 
 class JobNotFound(Exception):

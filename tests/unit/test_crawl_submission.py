@@ -7,8 +7,8 @@ from unittest.mock import patch
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.core.policy import PolicyDecision, PolicyGate
-from app.domain.models import Base, CrawlJob, Job
+from app.platform.network_policy.policy import PolicyDecision, PolicyGate
+from app.platform.persistence.models import Base, CrawlJob, Job
 
 
 def test_submit_persists_crawl_job_before_enqueuing(tmp_path) -> None:

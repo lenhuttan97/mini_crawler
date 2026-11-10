@@ -11,7 +11,7 @@ import hashlib
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.domain.models import Base, Job
+from app.platform.persistence.models import Base, Job
 from app.services.backup import BackupResult, BackupService
 
 

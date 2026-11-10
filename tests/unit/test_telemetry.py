@@ -6,7 +6,7 @@ from importlib import import_module
 
 
 def _import_logging():
-    return import_module("app.observability.logging")
+    return import_module("app.platform.observability.logging")
 
 
 def test_redaction_processor_strips_secrets() -> None:

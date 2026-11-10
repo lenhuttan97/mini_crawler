@@ -7,8 +7,8 @@ Không để controller gọi HTTPX hoặc bộ trích xuất trực tiếp.
 
 from __future__ import annotations
 
-from app.core.policy import PolicyCommand
-from app.domain.enums import JobStatus
+from app.platform.network_policy.policy import PolicyCommand
+from app.platform.persistence.enums import JobStatus
 
 
 class CrawlService:

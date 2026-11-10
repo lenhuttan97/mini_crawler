@@ -6,8 +6,8 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.domain.enums import SourceStatus
-from app.domain.models import Base, MediaJob
+from app.platform.persistence.enums import SourceStatus
+from app.platform.persistence.models import Base, MediaJob
 from app.services.source_registry_service import SourceRegistryService
 
 

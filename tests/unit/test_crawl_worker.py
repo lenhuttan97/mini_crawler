@@ -12,8 +12,8 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.domain.enums import JobStatus
-from app.domain.models import Base, CrawlJob, Job
+from app.platform.persistence.enums import JobStatus
+from app.platform.persistence.models import Base, CrawlJob, Job
 from app.workers.tasks import process_crawl_job
 
 

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from app.domain.enums import SourceStatus
+from app.platform.persistence.enums import SourceStatus
 
 # Tên gọi thân thi hơn cho registry (P04 §1).
 SourceState = SourceStatus

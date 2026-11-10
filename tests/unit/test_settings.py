@@ -8,7 +8,7 @@ import pytest
 
 
 def _import_settings():
-    return import_module("app.core.settings")
+    return import_module("app.bootstrap.settings")
 
 
 def test_settings_loads_from_environment(monkeypatch: pytest.MonkeyPatch) -> None:

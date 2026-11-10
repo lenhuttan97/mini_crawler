@@ -10,7 +10,7 @@ from dataclasses import dataclass
 
 from sqlalchemy.orm import Session
 
-from app.domain.models import Document
+from app.platform.persistence.models import Document
 
 
 @dataclass(frozen=True)

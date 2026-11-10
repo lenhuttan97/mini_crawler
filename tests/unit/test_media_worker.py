@@ -12,8 +12,8 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.domain.enums import SourceStatus
-from app.domain.models import Base, MediaAsset, MediaJob, MediaJobItem
+from app.platform.persistence.enums import SourceStatus
+from app.platform.persistence.models import Base, MediaAsset, MediaJob, MediaJobItem
 from app.services.source_registry import SourceRecord, SourceRegistry
 from app.workers.media_tasks import process_media_job
 

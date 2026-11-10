@@ -13,7 +13,7 @@ from typing import Any
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from app.observability.logging import bind_correlation_id, clear_correlation_id
+from app.platform.observability.logging import bind_correlation_id, clear_correlation_id
 
 HEADER_NAME = "X-Request-ID"
 

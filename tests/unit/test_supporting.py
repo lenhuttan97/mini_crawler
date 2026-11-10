@@ -10,7 +10,7 @@ import pytest
 
 from app.services.authorization import AuthorizationService, OwnershipDenied
 from app.services.document_library import DocumentLibrary
-from app.services.retry import RetryService
+from app.platform.queue_management.retry import RetryService
 
 
 def test_authorization_owner_allowed() -> None:
@@ -67,7 +67,7 @@ def test_document_library_list_pagination(tmp_path) -> None:
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
 
-    from app.domain.models import Base, Document
+    from app.platform.persistence.models import Base, Document
 
     db_path = str(tmp_path / "library.db")
     engine = create_engine(f"sqlite:///{db_path}", future=True)

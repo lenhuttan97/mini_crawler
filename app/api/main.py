@@ -9,9 +9,9 @@ from fastapi import FastAPI, HTTPException
 from app.api.exceptions import http_exception_handler, unhandled_exception_handler
 from app.api.middleware.correlation_id import CorrelationIdMiddleware
 from app.api.routers import crawl_jobs, documents, health, jobs, media_jobs, search
-from app.core.database import create_session_factory
-from app.core.settings import Settings
-from app.observability.logging import configure_logging, get_logger
+from app.bootstrap.database import create_session_factory
+from app.bootstrap.settings import Settings
+from app.platform.observability.logging import configure_logging, get_logger
 from app.services.crawl_submission import CrawlJobSubmitter
 from app.services.media_submission import MediaJobSubmitter
 from app.services.search_service import SearchService

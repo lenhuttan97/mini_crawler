@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from app.observability.alerts import ALERT_RULES
+from app.platform.observability.alerts import ALERT_RULES
 
 RUNBOOKS_DIR = Path(__file__).resolve().parents[2] / "docs" / "runbooks"
 

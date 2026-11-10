@@ -13,16 +13,16 @@ from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from app.adapters.static_fetcher import StaticFetcher
-from app.adapters.storage import StorageAdapter
-from app.core.database import create_session_factory
-from app.core.policy import PolicyGate
-from app.core.settings import Settings
-from app.domain.enums import JobStatus
-from app.domain.models import CrawlJob, Job
+from app.platform.asset_storage.storage import StorageAdapter
+from app.bootstrap.database import create_session_factory
+from app.platform.network_policy.policy import PolicyGate
+from app.bootstrap.settings import Settings
+from app.platform.persistence.enums import JobStatus
+from app.platform.persistence.models import CrawlJob, Job
 from app.services import normalizer
 from app.services.classifier import DocumentClassifier
 from app.services.crawl_service import CrawlService
-from app.services.jobs import JobService
+from app.platform.job_orchestration.service import JobService
 from app.services.persistence import PersistenceService
 from app.workers.celery_app import celery_app
 

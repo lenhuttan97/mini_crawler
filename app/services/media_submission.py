@@ -6,7 +6,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from app.domain.models import MediaJob
+from app.platform.persistence.models import MediaJob
 from app.services.media import MediaService
 
 

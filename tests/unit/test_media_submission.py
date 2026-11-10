@@ -7,8 +7,8 @@ from unittest.mock import patch
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.core.policy import PolicyDecision, PolicyGate
-from app.domain.models import Base, MediaJob, MediaJobItem
+from app.platform.network_policy.policy import PolicyDecision, PolicyGate
+from app.platform.persistence.models import Base, MediaJob, MediaJobItem
 
 
 def test_submit_persists_media_job_and_item_before_enqueuing(tmp_path) -> None:

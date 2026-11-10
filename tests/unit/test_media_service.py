@@ -10,8 +10,8 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.core.policy import PolicyDecision
-from app.domain.models import Base, MediaJob, MediaJobItem
+from app.platform.network_policy.policy import PolicyDecision
+from app.platform.persistence.models import Base, MediaJob, MediaJobItem
 from app.services.media import MediaManifestError, MediaQuotaExceeded, MediaService
 
 

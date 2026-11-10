@@ -10,7 +10,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from app.adapters.storage import (
+from app.platform.asset_storage.storage import (
     StorageAdapter,
     StorageError,
     StorageMetadata,

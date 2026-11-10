@@ -19,7 +19,7 @@ def test_celery_app_has_queues() -> None:
 
 def test_celery_factory_uses_typed_redis_setting() -> None:
     """Worker broker/backend must follow the same typed runtime settings as Compose."""
-    from app.core.settings import Settings
+    from app.bootstrap.settings import Settings
     from app.workers.celery_app import create_celery_app
 
     settings = Settings.model_validate({"REDIS_URL": "redis://queue.example:6380/3"})
@@ -55,7 +55,7 @@ def test_claim_job_returns_job_id(tmp_path) -> None:
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
 
-    from app.domain.models import Base, Job
+    from app.platform.persistence.models import Base, Job
 
     db_path = str(tmp_path / "workers.db")
     engine = create_engine(f"sqlite:///{db_path}", future=True)
@@ -83,7 +83,7 @@ def test_claim_job_none_when_no_pending(tmp_path) -> None:
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
 
-    from app.domain.models import Base
+    from app.platform.persistence.models import Base
 
     db_path = str(tmp_path / "workers2.db")
     engine = create_engine(f"sqlite:///{db_path}", future=True)
@@ -101,7 +101,7 @@ def test_complete_job_sets_completed(tmp_path) -> None:
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
 
-    from app.domain.models import Base, Job
+    from app.platform.persistence.models import Base, Job
 
     db_path = str(tmp_path / "workers3.db")
     engine = create_engine(f"sqlite:///{db_path}", future=True)
@@ -130,7 +130,7 @@ def test_fail_job_sets_failed_with_error_code(tmp_path) -> None:
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
 
-    from app.domain.models import Base, Job
+    from app.platform.persistence.models import Base, Job
 
     db_path = str(tmp_path / "workers4.db")
     engine = create_engine(f"sqlite:///{db_path}", future=True)

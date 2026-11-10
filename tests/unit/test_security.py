@@ -10,8 +10,8 @@ from pathlib import Path
 
 import pytest
 
-from app.core.policy import PolicyCommand, evaluate_policy
-from app.observability.logging import redact_event
+from app.platform.network_policy.policy import PolicyCommand, evaluate_policy
+from app.platform.observability.logging import redact_event
 
 ENV_EXAMPLE = Path(__file__).resolve().parents[2] / ".env.example"
 

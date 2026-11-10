@@ -13,9 +13,9 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.core.policy import PolicyDecision, PolicyGate
-from app.domain.models import Job
-from app.services.jobs import JobNotFound, JobOwnershipError, JobService
+from app.platform.network_policy.policy import PolicyDecision, PolicyGate
+from app.platform.persistence.models import Job
+from app.platform.job_orchestration.service import JobNotFound, JobOwnershipError, JobService
 
 
 @pytest.fixture
@@ -23,7 +23,7 @@ def db_session(tmp_path):
     """SQLAlchemy session trên SQLite file tạm, các bảng đã được tạo."""
     db_path = str(tmp_path / "jobs.db")
     engine = create_engine(f"sqlite:///{db_path}", future=True)
-    from app.domain.models import Base
+    from app.platform.persistence.models import Base
 
     Base.metadata.create_all(engine)
     SessionLocal = sessionmaker(bind=engine, future=True)

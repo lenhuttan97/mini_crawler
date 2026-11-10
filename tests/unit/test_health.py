@@ -56,7 +56,7 @@ def test_openapi_metadata() -> None:
 
 def test_app_exposes_injected_runtime_settings() -> None:
     """Routes must share the explicit Settings instance used to build the application."""
-    from app.core.settings import Settings
+    from app.bootstrap.settings import Settings
 
     settings = Settings(profile="test")
     app = _import_app().create_app(settings)

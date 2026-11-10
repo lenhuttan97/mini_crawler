@@ -7,8 +7,8 @@ from dataclasses import dataclass
 from fastapi.testclient import TestClient
 
 from app.api.main import create_app
-from app.domain.enums import JobStatus
-from app.services.jobs import JobOwnershipError
+from app.platform.persistence.enums import JobStatus
+from app.platform.job_orchestration.service import JobOwnershipError
 
 
 @dataclass(frozen=True)

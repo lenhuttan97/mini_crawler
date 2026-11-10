@@ -12,8 +12,8 @@ from unittest.mock import MagicMock
 from sqlalchemy import create_engine as _ce
 from sqlalchemy.orm import sessionmaker
 
-from app.domain.enums import JobStatus, SourceStatus
-from app.domain.models import Base, MediaAsset, MediaJob, MediaJobItem
+from app.platform.persistence.enums import JobStatus, SourceStatus
+from app.platform.persistence.models import Base, MediaAsset, MediaJob, MediaJobItem
 from app.services.source_registry_service import SourceRegistryService
 from app.workers.torrent_worker import (
     execute_torrent_job,

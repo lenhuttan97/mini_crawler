@@ -10,8 +10,8 @@ from __future__ import annotations
 import uuid
 from dataclasses import dataclass
 
-from app.adapters.storage import StorageAdapter
-from app.domain.models import CrawlJob, Document
+from app.platform.asset_storage.storage import StorageAdapter
+from app.platform.persistence.models import CrawlJob, Document
 
 
 def _object_key(prefix: str) -> str:

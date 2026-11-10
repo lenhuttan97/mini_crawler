@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.core.slo import SLO_THRESHOLDS
+from app.platform.observability.slo import SLO_THRESHOLDS
 
 
 def test_slo_thresholds_defined_and_valid() -> None:

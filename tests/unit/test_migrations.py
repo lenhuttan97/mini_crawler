@@ -10,7 +10,7 @@ from alembic.config import Config
 from sqlalchemy import create_engine, inspect
 
 from alembic import command
-from app.domain.models import Base
+from app.platform.persistence.models import Base
 
 
 def _alembic_cfg(db_path: str) -> Config:
