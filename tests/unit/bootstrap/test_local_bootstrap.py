@@ -25,7 +25,10 @@ def test_initialize_local_schema_creates_job_and_document_tables(tmp_path) -> No
 
 def test_initialize_local_schema_rejects_broker_mode(tmp_path) -> None:
     """Broker mode must use migrations, not implicit local schema creation."""
-    settings = Settings(database_url=f"sqlite:///{tmp_path / 'local.db'}")
+    settings = Settings(
+        database_url=f"sqlite:///{tmp_path / 'local.db'}",
+        _env_file=None,
+    )
 
     with pytest.raises(ValueError, match="local runtime"):
         initialize_local_schema(settings)

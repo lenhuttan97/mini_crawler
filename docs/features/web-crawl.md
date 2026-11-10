@@ -10,7 +10,7 @@ Web Crawl returns one `Document` with canonical URL, clean HTML/Markdown, conten
 
 ## After MVP
 
-`crawl_collection` with bounded depth 2–3, reviewed browser recipes and child-link following are deferred. Each of them must create separate bounded steps through Workflow Orchestration.
+MVP v1 uses static fetch only. `crawl_collection` with bounded depth 2–3, reviewed browser recipes and child-link following are deferred; each creates separate bounded steps through Workflow Orchestration rather than running inside this worker.
 
 ## Responsibility
 

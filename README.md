@@ -20,6 +20,7 @@ WorkflowRequest
 - **MVP v1:** `search`, `crawl_url` and bounded `search_and_extract` workflows for static content.
 - **v1.1 / v1.2:** approved static-image and video/browser-recipe workflows.
 - **v2+:** bounded depth 2–3 crawl and registered scheduled recrawl.
+- Browser fallback is **post-MVP v1** (reviewed server-side recipe only); it is not wired or tested as MVP v1 behavior.
 
 Read the active contracts and runbooks in [docs/INDEX.md](docs/INDEX.md). Historical/reference material is isolated under `docs/sample/`.
 
