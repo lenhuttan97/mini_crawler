@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Header, HTTPException, Request, status
+from fastapi import APIRouter, Header, HTTPException, Request, Response, status
 from pydantic import BaseModel, Field
 
 router = APIRouter(prefix="/v1", tags=["media"])
@@ -27,6 +27,7 @@ class CreateMediaJobResponse(BaseModel):
 def create_media_job(
     body: CreateMediaJobRequest,
     request: Request,
+    response: Response,
     caller_id: str = Header(alias="X-Caller-ID", min_length=1),
     idempotency_key: str = Header(alias="Idempotency-Key", min_length=1),
 ) -> dict[str, str]:
@@ -41,4 +42,5 @@ def create_media_job(
         idempotency_key=idempotency_key,
         items=body.items,
     )
+    response.status_code = getattr(request.app.state, "job_submission_status_code", 202)
     return {"media_job_id": submitted.job_id, "status": submitted.status}

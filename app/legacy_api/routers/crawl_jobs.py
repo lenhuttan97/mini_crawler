@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Header, HTTPException, Request, status
+from fastapi import APIRouter, Header, HTTPException, Request, Response, status
 from pydantic import BaseModel, Field
 
 router = APIRouter(prefix="/v1", tags=["crawl"])
@@ -29,6 +29,7 @@ class CreateCrawlJobResponse(BaseModel):
 def create_crawl_job(
     body: CreateCrawlJobRequest,
     request: Request,
+    response: Response,
     caller_id: str = Header(alias="X-Caller-ID", min_length=1),
     idempotency_key: str = Header(alias="Idempotency-Key", min_length=1),
 ) -> dict[str, Any]:
@@ -42,4 +43,5 @@ def create_crawl_job(
         caller_id=caller_id,
         idempotency_key=idempotency_key,
     )
+    response.status_code = getattr(request.app.state, "job_submission_status_code", 202)
     return {"crawl_job_id": submitted.job_id, "status": submitted.status}

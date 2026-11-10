@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from fastapi.testclient import TestClient
 
+from app.bootstrap.settings import Settings
 from app.legacy_api.main import create_app
 
 
@@ -72,3 +73,14 @@ def test_search_crawl_selected_returns_f01_job_id() -> None:
         "caller_id": "caller-1",
         "idempotency_key": "sel-1",
     }
+
+
+def test_local_search_is_explicitly_unavailable_without_provider() -> None:
+    """Local modes never assume a SearXNG provider exists."""
+    app = create_app(Settings(runtime_mode="inline", database_url="sqlite://"))
+
+    with TestClient(app) as client:
+        response = client.get("/v1/search", params={"q": "x"})
+
+    assert response.status_code == 503
+    assert app.state.search_service is None
