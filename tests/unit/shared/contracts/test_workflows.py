@@ -63,6 +63,9 @@ def test_job_intent_references_durable_command_not_payload() -> None:
         workflow_run_id="run-1",
         workflow_step_id="step-1",
         idempotency_scope="scope-1",
+        idempotency_key="idem-1",
+        caller_id="user-1",
+        correlation_id="corr-1",
     )
     assert intent.feature_code == "web_crawl"
     assert intent.command_ref == "cmd-1"
@@ -76,6 +79,9 @@ def test_job_intent_rejects_unsupported_feature_code() -> None:
             command_ref="cmd-1",
             workflow_run_id="run-1",
             idempotency_scope="scope-1",
+            idempotency_key="idem-1",
+            caller_id="user-1",
+            correlation_id="corr-1",
         )
 
 
