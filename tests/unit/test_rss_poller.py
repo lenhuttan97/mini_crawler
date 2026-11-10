@@ -13,8 +13,8 @@ from sqlalchemy.orm import sessionmaker
 
 from app.platform.persistence.enums import SourceStatus
 from app.platform.persistence.models import Base
-from app.services.rss_poller import RssPoller, RssPollError
-from app.services.source_registry_service import SourceRegistryService
+from app.legacy.rss.poller import RssPoller, RssPollError
+from app.features.video_download.application.source_registry_service import SourceRegistryService
 
 
 def test_rss_poller_requires_approved_source_with_rss_feature(tmp_path) -> None:

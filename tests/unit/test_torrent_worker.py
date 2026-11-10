@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.platform.persistence.enums import SourceStatus
 from app.platform.persistence.models import Base, MediaJob
-from app.services.source_registry_service import SourceRegistryService
+from app.features.video_download.application.source_registry_service import SourceRegistryService
 
 
 @pytest.fixture
@@ -38,7 +38,7 @@ def _make_media_job(session, status="pending"):
 
 def test_execute_torrent_job_requires_persisted_approved_torrent_source(db_session) -> None:
     """Queue task chỉ nhận job ID; nguồn chưa approved => blocked_policy, không gọi mạng."""
-    from app.workers.torrent_worker import execute_torrent_job
+    from app.legacy.torrent.worker import execute_torrent_job
 
     _make_media_job(db_session)
     registry = SourceRegistryService(db_session)

@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.platform.network_policy.policy import PolicyDecision
 from app.platform.persistence.models import Base, MediaJob, MediaJobItem
-from app.services.media import MediaManifestError, MediaQuotaExceeded, MediaService
+from app.features.image_download.application.service import MediaManifestError, MediaQuotaExceeded, MediaService
 
 
 @pytest.fixture
@@ -160,7 +160,7 @@ def test_duplicate_request_url_in_batch(db_session) -> None:
 
 def test_policy_denied_item_creates_no_media_job(db_session) -> None:
     """A denied direct-media URL stops before media job/item persistence."""
-    from app.services.media import MediaPolicyBlocked
+    from app.features.image_download.application.service import MediaPolicyBlocked
 
     policy_gate = type(
         "DenyPolicy",

@@ -13,7 +13,7 @@ from app.platform.persistence.models import Base, MediaJob, MediaJobItem
 
 def test_submit_persists_media_job_and_item_before_enqueuing(tmp_path) -> None:
     """Queue receives only a committed media job ID after policy-approved persistence."""
-    from app.services.media_submission import MediaJobSubmitter
+    from app.features.image_download.application.submission import MediaJobSubmitter
 
     engine = create_engine(f"sqlite:///{tmp_path / 'media-submission.db'}", future=True)
     Base.metadata.create_all(engine)

@@ -13,7 +13,7 @@ from app.bootstrap.database import create_session_factory
 from app.bootstrap.settings import Settings
 from app.platform.observability.logging import configure_logging, get_logger
 from app.features.web_crawl.application.submission import CrawlJobSubmitter
-from app.services.media_submission import MediaJobSubmitter
+from app.features.image_download.application.submission import MediaJobSubmitter
 from app.features.search.application.service import SearchService
 from app.workers.celery_app import create_celery_app
 
@@ -50,7 +50,7 @@ def create_app(
 
         def enqueue_media_job(job_id: str) -> None:
             media_task_app.send_task(
-                "app.workers.media_tasks.execute_media_job",
+                "app.features.image_download.worker.task.execute_media_job",
                 args=[job_id],
                 queue="media",
             )

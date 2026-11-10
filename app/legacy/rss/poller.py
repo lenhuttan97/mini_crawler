@@ -9,7 +9,7 @@ from __future__ import annotations
 import xml.etree.ElementTree as ET
 from typing import Any
 
-from app.services.source_registry_service import SourceRegistryService
+from app.features.video_download.application.source_registry_service import SourceRegistryService
 
 
 class RssPollError(Exception):

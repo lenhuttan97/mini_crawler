@@ -36,8 +36,8 @@ def create_celery_app(settings: Settings | None = None) -> Celery:
         "app.platform.queue_management.tasks.fail_job": {"queue": "crawl"},
         "app.features.web_crawl.worker.task.process_crawl_job": {"queue": "crawl"},
         "app.features.web_crawl.worker.task.execute_crawl_job": {"queue": "crawl"},
-        "app.workers.media_tasks.execute_media_job": {"queue": "media"},
-        "app.workers.torrent_worker.execute_torrent_job": {"queue": "torrent"},
+        "app.features.image_download.worker.task.execute_media_job": {"queue": "media"},
+        "app.legacy.torrent.worker.execute_torrent_job": {"queue": "torrent"},
         "app.platform.queue_management.tasks.maintenance_job": {"queue": "maintenance"},
     }
 

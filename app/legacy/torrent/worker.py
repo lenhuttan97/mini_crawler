@@ -18,7 +18,7 @@ from app.bootstrap.database import create_session_factory
 from app.bootstrap.settings import Settings
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import MediaAsset, MediaJob, MediaJobItem
-from app.services.source_registry import SourceRegistry
+from app.features.video_download.application.source_registry import SourceRegistry
 from app.workers.celery_app import celery_app
 
 
@@ -173,4 +173,4 @@ def execute_torrent_job(
         session.close()
 
 
-celery_app.task(name="app.workers.torrent_worker.execute_torrent_job")(execute_torrent_job)
+celery_app.task(name="app.legacy.torrent.worker.execute_torrent_job")(execute_torrent_job)

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.services.rss_normalizer import normalize_rss_items
+from app.legacy.rss.normalizer import normalize_rss_items
 
 
 class SourceFeatureDenied(Exception):

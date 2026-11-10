@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.platform.persistence.enums import SourceStatus
 from app.platform.persistence.models import Base
-from app.services.rss_normalizer import (
+from app.legacy.rss.normalizer import (
     TorrentQuotaError,
     classify_torrent_quota,
     normalize_rss_items,
@@ -71,8 +71,8 @@ def test_classify_torrent_quota_exceeded() -> None:
 
 def test_rss_discovery_requires_persisted_approved_rss_feature(tmp_path) -> None:
     """RSS discovery normalizes approved feed items but never creates a download job."""
-    from app.services.rss_discovery import discover_rss_items
-    from app.services.source_registry_service import SourceRegistryService
+    from app.legacy.rss.discovery import discover_rss_items
+    from app.features.video_download.application.source_registry_service import SourceRegistryService
 
     engine = create_engine(f"sqlite:///{tmp_path / 'rss.db'}", future=True)
     Base.metadata.create_all(engine)

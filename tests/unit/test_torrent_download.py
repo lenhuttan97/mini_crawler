@@ -14,8 +14,8 @@ from sqlalchemy.orm import sessionmaker
 
 from app.platform.persistence.enums import JobStatus, SourceStatus
 from app.platform.persistence.models import Base, MediaAsset, MediaJob, MediaJobItem
-from app.services.source_registry_service import SourceRegistryService
-from app.workers.torrent_worker import (
+from app.features.video_download.application.source_registry_service import SourceRegistryService
+from app.legacy.torrent.worker import (
     execute_torrent_job,
 )
 

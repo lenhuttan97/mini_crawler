@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from app.platform.persistence.models import MediaJob
-from app.services.media import MediaService
+from app.features.image_download.application.service import MediaService
 
 
 @dataclass(frozen=True)

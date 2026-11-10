@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.services.source_registry import (
+from app.features.video_download.application.source_registry import (
     SourceRecord,
     SourceRegistry,
     SourceState,

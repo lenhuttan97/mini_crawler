@@ -18,7 +18,7 @@ from app.bootstrap.database import create_session_factory
 from app.bootstrap.settings import Settings
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import MediaAsset, MediaJob, MediaJobItem
-from app.services.source_registry import SourceRegistry
+from app.features.video_download.application.source_registry import SourceRegistry
 from app.workers.celery_app import celery_app
 
 # Magic bytes header -> mime type được phép.
@@ -192,4 +192,4 @@ def execute_media_job(
         session.close()
 
 
-celery_app.task(name="app.workers.media_tasks.execute_media_job")(execute_media_job)
+celery_app.task(name="app.features.image_download.worker.task.execute_media_job")(execute_media_job)

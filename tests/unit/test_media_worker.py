@@ -14,8 +14,8 @@ from sqlalchemy.orm import sessionmaker
 
 from app.platform.persistence.enums import SourceStatus
 from app.platform.persistence.models import Base, MediaAsset, MediaJob, MediaJobItem
-from app.services.source_registry import SourceRecord, SourceRegistry
-from app.workers.media_tasks import process_media_job
+from app.features.video_download.application.source_registry import SourceRecord, SourceRegistry
+from app.features.image_download.worker.task import process_media_job
 
 
 @pytest.fixture
@@ -169,7 +169,7 @@ def test_process_media_job_blocks_item_exceeding_total_byte_quota(db_session) ->
 
 def test_execute_media_job_loads_session_from_job_id(db_session) -> None:
     """Queue task payload is only job ID; dependencies are composed at worker boundary."""
-    from app.workers.media_tasks import execute_media_job
+    from app.features.image_download.worker.task import execute_media_job
 
     _make_media_job(db_session, ["https://example.com/a.png"])
     downloader = MagicMock()
