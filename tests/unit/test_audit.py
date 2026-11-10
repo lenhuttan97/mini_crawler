@@ -12,8 +12,8 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.platform.persistence.models import Base
 from app.platform.observability.audit import AuditService
+from app.platform.persistence.models import Base
 
 
 @pytest.fixture

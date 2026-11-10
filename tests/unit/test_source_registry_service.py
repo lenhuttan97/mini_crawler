@@ -11,7 +11,9 @@ from app.platform.persistence.models import Base
 
 def test_durable_registry_requires_approved_source_and_enabled_feature(tmp_path) -> None:
     """Video/torrent/RSS network work is deny-by-default per persisted source flag."""
-    from app.features.video_download.application.source_registry_service import SourceRegistryService
+    from app.features.video_download.application.source_registry_service import (
+        SourceRegistryService,
+    )
 
     engine = create_engine(f"sqlite:///{tmp_path / 'sources.db'}", future=True)
     Base.metadata.create_all(engine)

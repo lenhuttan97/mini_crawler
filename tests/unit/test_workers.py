@@ -35,7 +35,9 @@ def test_celery_task_routes() -> None:
     assert routes.get("app.platform.queue_management.tasks.claim_job") == {"queue": "crawl"}
     assert routes.get("app.platform.queue_management.tasks.complete_job") == {"queue": "crawl"}
     assert routes.get("app.platform.queue_management.tasks.fail_job") == {"queue": "crawl"}
-    assert routes.get("app.platform.queue_management.tasks.maintenance_job") == {"queue": "maintenance"}
+    assert routes.get("app.platform.queue_management.tasks.maintenance_job") == {
+        "queue": "maintenance"
+    }
 
 
 def test_celery_time_limits() -> None:

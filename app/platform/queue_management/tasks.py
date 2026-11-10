@@ -8,9 +8,9 @@ from __future__ import annotations
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
+from app.entrypoints.celery_worker import celery_app
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import Job
-from app.entrypoints.celery_worker import celery_app
 
 
 def claim_job(session: Session, job_type: str) -> str | None:

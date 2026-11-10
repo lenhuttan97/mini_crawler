@@ -9,9 +9,12 @@ from __future__ import annotations
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from app.features.video_download.application.service import (
+    VideoDiscoveryError,
+    VideoDiscoveryService,
+)
 from app.platform.persistence.enums import SourceStatus
 from app.platform.persistence.models import Base
-from app.features.video_download.application.service import VideoDiscoveryError, VideoDiscoveryService
 
 
 def test_video_discovery_requires_approved_source_with_video_feature(tmp_path) -> None:
@@ -20,7 +23,9 @@ def test_video_discovery_requires_approved_source_with_video_feature(tmp_path) -
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine, future=True)()
 
-    from app.features.video_download.application.source_registry_service import SourceRegistryService
+    from app.features.video_download.application.source_registry_service import (
+        SourceRegistryService,
+    )
 
     registry = SourceRegistryService(session)
 

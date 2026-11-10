@@ -12,10 +12,10 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from app.features.image_download.worker.task import process_media_job
+from app.features.video_download.application.source_registry import SourceRecord, SourceRegistry
 from app.platform.persistence.enums import SourceStatus
 from app.platform.persistence.models import Base, MediaAsset, MediaJob, MediaJobItem
-from app.features.video_download.application.source_registry import SourceRecord, SourceRegistry
-from app.features.image_download.worker.task import process_media_job
 
 
 @pytest.fixture

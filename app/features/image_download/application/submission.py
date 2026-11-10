@@ -6,8 +6,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from app.platform.persistence.models import MediaJob
 from app.features.image_download.application.service import MediaService
+from app.platform.persistence.models import MediaJob
 
 
 @dataclass(frozen=True)

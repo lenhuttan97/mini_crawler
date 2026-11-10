@@ -13,13 +13,13 @@ from urllib.parse import urlsplit
 
 import httpx
 
-from app.platform.asset_storage.storage import StorageAdapter
 from app.bootstrap.database import create_session_factory
 from app.bootstrap.settings import Settings
+from app.entrypoints.celery_worker import celery_app
+from app.features.video_download.application.source_registry import SourceRegistry
+from app.platform.asset_storage.storage import StorageAdapter
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import MediaAsset, MediaJob, MediaJobItem
-from app.features.video_download.application.source_registry import SourceRegistry
-from app.entrypoints.celery_worker import celery_app
 
 # Magic bytes header -> mime type được phép.
 ALLOWED_MAGIC: dict[bytes, str] = {

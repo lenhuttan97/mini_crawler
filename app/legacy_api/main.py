@@ -6,16 +6,16 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 
+from app.bootstrap.database import create_session_factory
+from app.bootstrap.settings import Settings
+from app.entrypoints.celery_worker import create_celery_app
+from app.features.image_download.application.submission import MediaJobSubmitter
+from app.features.search.application.service import SearchService
+from app.features.web_crawl.application.submission import CrawlJobSubmitter
 from app.legacy_api.exceptions import http_exception_handler, unhandled_exception_handler
 from app.legacy_api.middleware.correlation_id import CorrelationIdMiddleware
 from app.legacy_api.routers import crawl_jobs, documents, health, jobs, media_jobs, search
-from app.bootstrap.database import create_session_factory
-from app.bootstrap.settings import Settings
 from app.platform.observability.logging import configure_logging, get_logger
-from app.features.web_crawl.application.submission import CrawlJobSubmitter
-from app.features.image_download.application.submission import MediaJobSubmitter
-from app.features.search.application.service import SearchService
-from app.entrypoints.celery_worker import create_celery_app
 
 _logger = get_logger(__name__)
 

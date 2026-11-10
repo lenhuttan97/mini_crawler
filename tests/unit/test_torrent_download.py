@@ -12,12 +12,12 @@ from unittest.mock import MagicMock
 from sqlalchemy import create_engine as _ce
 from sqlalchemy.orm import sessionmaker
 
-from app.platform.persistence.enums import JobStatus, SourceStatus
-from app.platform.persistence.models import Base, MediaAsset, MediaJob, MediaJobItem
 from app.features.video_download.application.source_registry_service import SourceRegistryService
 from app.legacy.torrent.worker import (
     execute_torrent_job,
 )
+from app.platform.persistence.enums import JobStatus, SourceStatus
+from app.platform.persistence.models import Base, MediaAsset, MediaJob, MediaJobItem
 
 
 def _make_torrent_job(session, status="pending"):

@@ -6,8 +6,8 @@ from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException, Request, status
 
-from app.platform.persistence.enums import JobStatus
 from app.platform.job_orchestration.service import JobNotFound, JobOwnershipError
+from app.platform.persistence.enums import JobStatus
 
 router = APIRouter(prefix="/v1", tags=["jobs"])
 

@@ -16,10 +16,10 @@ from urllib.parse import urlsplit
 
 from app.bootstrap.database import create_session_factory
 from app.bootstrap.settings import Settings
+from app.entrypoints.celery_worker import celery_app
+from app.features.video_download.application.source_registry import SourceRegistry
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import MediaAsset, MediaJob, MediaJobItem
-from app.features.video_download.application.source_registry import SourceRegistry
-from app.entrypoints.celery_worker import celery_app
 
 
 class TorrentDownloadError(Exception):

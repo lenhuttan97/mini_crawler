@@ -9,22 +9,21 @@ from __future__ import annotations
 
 import asyncio
 
-from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from app.bootstrap.database import create_session_factory
 from app.bootstrap.settings import Settings
-from app.features.web_crawl.application.classifier import DocumentClassifier
+from app.entrypoints.celery_worker import celery_app
 from app.features.web_crawl.application import normalizer
+from app.features.web_crawl.application.classifier import DocumentClassifier
 from app.features.web_crawl.application.service import CrawlService
 from app.features.web_crawl.infrastructure.static_fetcher import StaticFetcher
 from app.platform.asset_storage.storage import StorageAdapter
+from app.platform.document_storage.service import PersistenceService
 from app.platform.job_orchestration.service import JobService
 from app.platform.network_policy.policy import PolicyGate
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import CrawlJob, Job
-from app.platform.document_storage.service import PersistenceService
-from app.entrypoints.celery_worker import celery_app
 
 
 def process_crawl_job(session: Session, job_id: str, crawl_service=None) -> str | None:

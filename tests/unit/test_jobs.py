@@ -13,9 +13,9 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.platform.job_orchestration.service import JobNotFound, JobOwnershipError, JobService
 from app.platform.network_policy.policy import PolicyDecision, PolicyGate
 from app.platform.persistence.models import Job
-from app.platform.job_orchestration.service import JobNotFound, JobOwnershipError, JobService
 
 
 @pytest.fixture

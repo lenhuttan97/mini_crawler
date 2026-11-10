@@ -12,9 +12,9 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from app.features.web_crawl.worker.task import process_crawl_job
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import Base, CrawlJob, Job
-from app.features.web_crawl.worker.task import process_crawl_job
 
 
 @pytest.fixture

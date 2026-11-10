@@ -12,7 +12,11 @@ import httpx
 import pytest
 import respx
 
-from app.features.web_crawl.infrastructure.static_fetcher import FetchError, FetchResult, StaticFetcher
+from app.features.web_crawl.infrastructure.static_fetcher import (
+    FetchError,
+    FetchResult,
+    StaticFetcher,
+)
 
 
 def _run(coro):
