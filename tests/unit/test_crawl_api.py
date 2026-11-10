@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from fastapi.testclient import TestClient
 
-from app.api.main import create_app
+from app.legacy_api.main import create_app
 from app.bootstrap.settings import Settings
 from app.features.web_crawl.application.submission import CrawlJobSubmitter
 

@@ -24,7 +24,7 @@ from app.platform.network_policy.policy import PolicyGate
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import CrawlJob, Job
 from app.platform.document_storage.service import PersistenceService
-from app.workers.celery_app import celery_app
+from app.entrypoints.celery_worker import celery_app
 
 
 def process_crawl_job(session: Session, job_id: str, crawl_service=None) -> str | None:

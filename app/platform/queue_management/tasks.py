@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import Job
-from app.workers.celery_app import celery_app
+from app.entrypoints.celery_worker import celery_app
 
 
 def claim_job(session: Session, job_type: str) -> str | None:

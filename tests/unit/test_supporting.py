@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import pytest
 
-from app.services.authorization import AuthorizationService, OwnershipDenied
-from app.services.document_library import DocumentLibrary
+from app.legacy.support.authorization import AuthorizationService, OwnershipDenied
+from app.legacy.support.document_library import DocumentLibrary
 from app.platform.queue_management.retry import RetryService
 
 

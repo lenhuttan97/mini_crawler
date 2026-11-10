@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.platform.persistence.models import Base, Job
-from app.services.backup import BackupResult, BackupService
+from app.legacy.support.backup import BackupResult, BackupService
 
 
 def _make_engine(tmp_path, name: str):

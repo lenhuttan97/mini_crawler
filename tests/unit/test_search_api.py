@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from fastapi.testclient import TestClient
 
-from app.api.main import create_app
+from app.legacy_api.main import create_app
 
 
 class _FakeSearchService:

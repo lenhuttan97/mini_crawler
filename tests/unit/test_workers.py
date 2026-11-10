@@ -7,7 +7,7 @@ không cần broker Redis thật.
 
 from __future__ import annotations
 
-from app.workers.celery_app import celery_app
+from app.entrypoints.celery_worker import celery_app
 from app.platform.queue_management.tasks import claim_job, complete_job, fail_job
 
 
@@ -20,7 +20,7 @@ def test_celery_app_has_queues() -> None:
 def test_celery_factory_uses_typed_redis_setting() -> None:
     """Worker broker/backend must follow the same typed runtime settings as Compose."""
     from app.bootstrap.settings import Settings
-    from app.workers.celery_app import create_celery_app
+    from app.entrypoints.celery_worker import create_celery_app
 
     settings = Settings.model_validate({"REDIS_URL": "redis://queue.example:6380/3"})
     configured_app = create_celery_app(settings)

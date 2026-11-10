@@ -6,7 +6,7 @@ from importlib import import_module
 
 
 def _import_app():
-    return import_module("app.api.main")
+    return import_module("app.legacy_api.main")
 
 
 def test_health_live() -> None:

@@ -19,7 +19,7 @@ from app.bootstrap.settings import Settings
 from app.platform.persistence.enums import JobStatus
 from app.platform.persistence.models import MediaAsset, MediaJob, MediaJobItem
 from app.features.video_download.application.source_registry import SourceRegistry
-from app.workers.celery_app import celery_app
+from app.entrypoints.celery_worker import celery_app
 
 # Magic bytes header -> mime type được phép.
 ALLOWED_MAGIC: dict[bytes, str] = {
