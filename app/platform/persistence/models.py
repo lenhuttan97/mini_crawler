@@ -167,3 +167,132 @@ class SourceRegistryEntry(Base):
     distribution_evidence: Mapped[str] = mapped_column(String(512), nullable=False)
     feature_flags: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
     review_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class FeatureJob(Base):
+    """Durable feature job for worker v1 (additive to legacy jobs table)."""
+
+    __tablename__ = "feature_jobs"
+
+    job_id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    feature_code: Mapped[str] = mapped_column(String(40), nullable=False, index=True)
+    contract_version: Mapped[str] = mapped_column(String(16), nullable=False, default="v1")
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="pending_publish")
+    idempotency_scope: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    idempotency_key: Mapped[str] = mapped_column(String(128), nullable=False)
+    caller_id: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    correlation_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    attempts: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+    next_run_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True, index=True
+    )
+    cancellation_state: Mapped[str] = mapped_column(String(32), nullable=False, default="none")
+    result_reference: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    reason_code: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint(
+            "idempotency_scope", "idempotency_key", name="uq_feature_jobs_idempotency"
+        ),
+    )
+
+
+class JobCommand(Base):
+    """Durable typed command for a feature job; never crosses the broker."""
+
+    __tablename__ = "job_commands"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    feature_job_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    command_type: Mapped[str] = mapped_column(String(40), nullable=False)
+    command_payload: Mapped[dict] = mapped_column(JSON, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
+class OutboxEvent(Base):
+    """Durable outbox event; publisher replays unconfirmed events safely."""
+
+    __tablename__ = "outbox_events"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    event_type: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    message_payload: Mapped[dict] = mapped_column(JSON, nullable=False)
+    status: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="pending_publish", index=True
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class JobLease(Base):
+    """Atomic lease acquired by a worker before executing a feature job."""
+
+    __tablename__ = "job_leases"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    feature_job_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    lease_owner: Mapped[str] = mapped_column(String(128), nullable=False)
+    lease_expires_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, index=True
+    )
+    attempt: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
+class WorkflowRun(Base):
+    """Durable parent record for one workflow execution."""
+
+    __tablename__ = "workflow_runs"
+
+    run_id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    definition_version: Mapped[str] = mapped_column(String(16), nullable=False, default="v1")
+    state: Mapped[str] = mapped_column(String(32), nullable=False, default="pending")
+    child_job_ids: Mapped[list[str]] = mapped_column(JSON, nullable=False, default=list)
+    aggregate_result: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class WorkflowStep(Base):
+    """One resolved dependency inside a workflow run."""
+
+    __tablename__ = "workflow_steps"
+
+    step_id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    workflow_run_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    input_ref: Mapped[str] = mapped_column(String(128), nullable=False)
+    coordinator: Mapped[str] = mapped_column(String(40), nullable=False)
+    state: Mapped[str] = mapped_column(String(32), nullable=False, default="pending")
+    child_job_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    output_ref: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    error_ref: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class SearchResultSet(Base):
+    """Durable search result set with a safe reference."""
+
+    __tablename__ = "search_result_sets"
+
+    result_set_id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    query_hash: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    results_ref: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    caller_id: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
