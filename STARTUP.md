@@ -49,31 +49,62 @@ docker compose down
 
 These modes run FastAPI with SQLite and a local object directory. They need no Redis/Celery, MinIO or SearXNG. Create the SQLite schema explicitly before the first run; API startup never creates tables.
 
-```bash
-export APP_RUNTIME_MODE=inline
-export DATABASE_URL=sqlite:///./.runtime/local.db
-export APP_LOCAL_STORAGE_PATH=./.runtime/objects
+Prepared env files are provided (git-ignored): `.env.inline` and `.env.db-worker`. Copy one to `.env`, or `export` its variables directly.
 
+### Mode inline — API executes crawl/image work in the request (HTTP 200)
+
+```bash
+mkdir -p .runtime .runtime/objects
+cp .env.inline .env
+
+uv run python -m app.entrypoints.local_bootstrap
+uv run uvicorn app.legacy_api.main:create_app --factory --reload
+```
+
+Or without copying:
+
+```bash
+mkdir -p .runtime .runtime/objects
+set -a; . .env.inline; set +a
 uv run python -m app.entrypoints.local_bootstrap
 uv run uvicorn app.legacy_api.main:create_app --factory --reload
 ```
 
 `inline` waits for crawl/image work to finish before responding, so it returns `200` with the persisted terminal status and can hit HTTP timeouts on slow remote work.
 
-For the asynchronous, DB-backed variant, run the API and one worker process with the same database and storage path:
+### Mode db-worker — API persists jobs (HTTP 202); a separate worker executes them
+
+Terminal 1 — API:
+
+```bash
+mkdir -p .runtime .runtime/objects
+cp .env.db-worker .env
+
+uv run python -m app.entrypoints.local_bootstrap
+uv run uvicorn app.legacy_api.main:create_app --factory --reload
+```
+
+Terminal 2 — exactly one worker process (same database + storage path as the API):
+
+```bash
+mkdir -p .runtime .runtime/objects
+cp .env.db-worker .env
+
+uv run python -m app.entrypoints.database_worker
+```
+
+Or without copying:
 
 ```bash
 # Terminal 1: API
-export APP_RUNTIME_MODE=db-worker
-export DATABASE_URL=sqlite:///./.runtime/local.db
-export APP_LOCAL_STORAGE_PATH=./.runtime/objects
+mkdir -p .runtime .runtime/objects
+set -a; . .env.db-worker; set +a
 uv run python -m app.entrypoints.local_bootstrap
 uv run uvicorn app.legacy_api.main:create_app --factory --reload
 
 # Terminal 2: worker
-export APP_RUNTIME_MODE=db-worker
-export DATABASE_URL=sqlite:///./.runtime/local.db
-export APP_LOCAL_STORAGE_PATH=./.runtime/objects
+mkdir -p .runtime .runtime/objects
+set -a; . .env.db-worker; set +a
 uv run python -m app.entrypoints.database_worker
 ```
 
