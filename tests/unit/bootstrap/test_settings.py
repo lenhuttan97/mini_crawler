@@ -59,3 +59,25 @@ def test_settings_loads_compose_infrastructure_urls(monkeypatch: pytest.MonkeyPa
     assert settings.minio_access_key.get_secret_value() == "minio-access"
     assert settings.minio_secret_key.get_secret_value() == "minio-secret"
     assert settings.searxng_url == "http://searxng:8080"
+
+
+def test_local_runtime_defaults_to_disabled_search_and_local_storage(
+    monkeypatch: pytest.MonkeyPatch, tmp_path
+) -> None:
+    """Local mode uses local storage and never assumes a search provider exists."""
+    monkeypatch.setenv("APP_RUNTIME_MODE", "inline")
+    monkeypatch.setenv("APP_LOCAL_STORAGE_PATH", str(tmp_path / "objects"))
+
+    settings = _import_settings().Settings()
+
+    assert settings.runtime_mode == "inline"
+    assert settings.search_enabled is False
+    assert settings.local_storage_path == tmp_path / "objects"
+
+
+def test_unknown_runtime_mode_is_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A typo in runtime mode fails fast instead of silently starting broker mode."""
+    monkeypatch.setenv("APP_RUNTIME_MODE", "queue-on-mars")
+
+    with pytest.raises(ValueError, match="APP_RUNTIME_MODE"):
+        _import_settings().Settings()

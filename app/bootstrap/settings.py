@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Literal
+
 from pydantic import AliasChoices, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -21,6 +24,18 @@ class Settings(BaseSettings):
     debug: bool = False
     port: int = 8000
     secret_key: SecretStr | None = None
+    runtime_mode: Literal["broker", "inline", "db-worker"] = Field(
+        default="broker",
+        validation_alias=AliasChoices("APP_RUNTIME_MODE", "RUNTIME_MODE"),
+    )
+    local_storage_path: Path = Field(
+        default=Path(".runtime/objects"),
+        validation_alias=AliasChoices("APP_LOCAL_STORAGE_PATH", "LOCAL_STORAGE_PATH"),
+    )
+    search_enabled: bool | None = Field(
+        default=None,
+        validation_alias=AliasChoices("APP_SEARCH_ENABLED", "SEARCH_ENABLED"),
+    )
     database_url: str = Field(
         default="postgresql+psycopg://minicrawler:devpassword@localhost:5432/minicrawler",
         validation_alias=AliasChoices("DATABASE_URL", "APP_DATABASE_URL"),
@@ -57,4 +72,6 @@ class Settings(BaseSettings):
             self.debug = True
         if self.profile == "prod" and not self.secret_key:
             raise ValueError("APP_SECRET_KEY is required in the prod profile")
+        if self.search_enabled is None:
+            self.search_enabled = self.runtime_mode == "broker"
         return self
