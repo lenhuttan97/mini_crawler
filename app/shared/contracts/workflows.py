@@ -56,6 +56,9 @@ class JobIntent(BaseModel):
     workflow_run_id: str
     workflow_step_id: str | None = None
     idempotency_scope: str = Field(min_length=1)
+    idempotency_key: str = Field(min_length=1)
+    caller_id: str = Field(min_length=1)
+    correlation_id: str = Field(min_length=1)
     caller_context: dict[str, Any] | None = None
 
     @field_validator("feature_code")
