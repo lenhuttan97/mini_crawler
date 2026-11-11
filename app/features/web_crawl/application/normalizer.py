@@ -256,11 +256,24 @@ def _parse_datetime(value) -> datetime | None:
 
 
 def _select_content_root(parser: HTMLParser):
-    for selector in ("article", "main", '[role="main"]'):
+    selectors = ("article", "main", '[role="main"]', "body")
+    all_candidates: list = []
+    # Ưu tiên group đầu tiên đã có candidate đủ lớn (tránh chọn teaser/card ngắn
+    # khi trang cũng có <main> chứa bài viết thật).
+    for selector in selectors:
         candidates = parser.css(selector)
-        if candidates:
-            return max(candidates, key=lambda node: _non_space_length(node.text()))
-    return parser.css_first("body") or parser.root
+        if not candidates:
+            continue
+        best = max(candidates, key=lambda node: _non_space_length(node.text()))
+        all_candidates.append(best)
+        if _non_space_length(best.text()) >= MIN_CONTENT_CHARS:
+            return best
+    # Không group nào đủ lớn: lấy candidate lớn nhất tìm được (thường là body).
+    return (
+        max(all_candidates, key=lambda node: _non_space_length(node.text()))
+        if all_candidates
+        else (parser.css_first("body") or parser.root)
+    )
 
 
 def _prune_root(root) -> None:
