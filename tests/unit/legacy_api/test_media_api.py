@@ -30,7 +30,10 @@ class _FakeMediaSubmitter:
 def test_create_direct_media_job_returns_pending_job_id() -> None:
     """API submits direct media work without downloading in the request process."""
     submitter = _FakeMediaSubmitter()
-    app = create_app(media_job_submitter=submitter)
+    app = create_app(
+        media_job_submitter=submitter,
+        settings=Settings(_env_file=None),
+    )
     with TestClient(app) as client:
         response = client.post(
             "/v1/media-jobs",

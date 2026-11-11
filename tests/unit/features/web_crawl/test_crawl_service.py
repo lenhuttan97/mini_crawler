@@ -8,11 +8,16 @@ Tất cả dependency bị mock, không gọi mạng thật.
 from __future__ import annotations
 
 import asyncio
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from app.features.web_crawl.application.service import CrawlService
+
+JSON_LD = {"@type": "NewsArticle", "headline": "Tiêu đề"}
+PUBLISHED_AT = datetime(2026, 11, 8, 9, 30, tzinfo=UTC)
+UPDATED_AT = datetime(2026, 11, 9, 10, 0, tzinfo=UTC)
 
 
 def _make_service():
@@ -36,7 +41,14 @@ def _make_service():
         content_hash="hash-1",
         markdown="# Nội dung",
         clean_html="<article>Nội dung</article>",
-        links=[],
+        summary="Tóm tắt",
+        authors=("Nguyễn Văn A",),
+        published_at=PUBLISHED_AT,
+        updated_at=UPDATED_AT,
+        section="Kinh tế",
+        language="vi",
+        json_ld=JSON_LD,
+        content_is_sufficient=True,
     )
     classifier = MagicMock()
     classifier.classify.return_value = MagicMock(
@@ -120,3 +132,40 @@ def test_crawl_idempotency_same_key() -> None:
         service.crawl(url="https://example.com/p", caller_id="user-1", idempotency_key="idem-3")
     )
     assert deps["job_service"].create_job.call_count == 2  # JobService xử lý idempotency nội bộ
+
+
+def test_crawl_passes_json_ld_and_quality_to_classifier() -> None:
+    """Classifier nhận JSON-LD đã trích và cờ chất lượng nội dung."""
+    service, deps = _make_service()
+    asyncio.run(
+        service.crawl(
+            url="https://example.com/page",
+            caller_id="user-1",
+            idempotency_key="idem-4",
+        )
+    )
+
+    kwargs = deps["classifier"].classify.call_args.kwargs
+    assert kwargs["json_ld"] == JSON_LD
+    assert kwargs["content_is_sufficient"] is True
+
+
+def test_crawl_maps_all_article_metadata_to_persistence() -> None:
+    """Mọi metadata bài viết được map tường minh sang persistence."""
+    service, deps = _make_service()
+    asyncio.run(
+        service.crawl(
+            url="https://example.com/page",
+            caller_id="user-1",
+            idempotency_key="idem-5",
+        )
+    )
+
+    saved = deps["persistence"].save_document.call_args.kwargs
+    assert saved["summary"] == "Tóm tắt"
+    assert saved["authors"] == ("Nguyễn Văn A",)
+    assert saved["published_at"] == PUBLISHED_AT
+    assert saved["updated_at"] == UPDATED_AT
+    assert saved["section"] == "Kinh tế"
+    assert saved["language"] == "vi"
+    assert saved["clean_html"] == "<article>Nội dung</article>"

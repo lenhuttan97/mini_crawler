@@ -39,7 +39,7 @@ Owner: ____________________  Date: ___________  Signature: ____________
 ## 5. Feature readiness
 
 - [ ] Search không auto-crawl.
-- [ ] Web Crawl revalidates policy trước network/redirect và browser fallback được kiểm soát.
+- [ ] Web Crawl revalidates policy trước network/redirect; browser fallback (nếu có) là post-MVP v1, không được kích hoạt trong MVP v1.
 - [ ] Image có per-item quota, MIME/magic-byte validation và partial-result manifest.
 - [ ] Video chỉ source approved; DRM/policy block là terminal; torrent ngoài scope nếu chưa phê duyệt riêng.
 - [ ] Docs index, feature/platform contracts và runbooks được cập nhật.

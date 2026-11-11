@@ -70,6 +70,42 @@ def test_jobs_table_has_idempotency_unique_constraint(tmp_path) -> None:
     ), constraints
 
 
+ARTICLE_METADATA_COLUMNS = {
+    "summary",
+    "authors",
+    "published_at",
+    "updated_at",
+    "section",
+    "language",
+    "article_html_key",
+}
+
+
+def test_article_metadata_columns_added(tmp_path) -> None:
+    """Upgrade to head thêm cột metadata bài viết vào documents."""
+    db_path = str(tmp_path / "article-columns.db")
+    cfg = _alembic_cfg(db_path)
+    command.upgrade(cfg, "head")
+
+    inspector = inspect(create_engine(f"sqlite:///{db_path}"))
+    columns = {column["name"] for column in inspector.get_columns("documents")}
+    assert ARTICLE_METADATA_COLUMNS <= columns, ARTICLE_METADATA_COLUMNS - columns
+
+
+def test_article_metadata_columns_removed_on_downgrade(tmp_path) -> None:
+    """Downgrade về 0002 chỉ bỏ các cột mới, giữ nguyên bảng documents."""
+    db_path = str(tmp_path / "article-downgrade.db")
+    cfg = _alembic_cfg(db_path)
+    command.upgrade(cfg, "head")
+    command.downgrade(cfg, "0002_worker_v1_jobs")
+
+    inspector = inspect(create_engine(f"sqlite:///{db_path}"))
+    assert "documents" in inspector.get_table_names()
+    columns = {column["name"] for column in inspector.get_columns("documents")}
+    assert not (ARTICLE_METADATA_COLUMNS & columns), ARTICLE_METADATA_COLUMNS & columns
+    assert {"id", "canonical_url", "title", "content_hash", "markdown_key"} <= columns
+
+
 def test_migration_schema_matches_orm_metadata(tmp_path) -> None:
     """Alembic head phải có đúng bảng/cột mà ORM runtime sử dụng."""
     db_path = str(tmp_path / "parity.db")

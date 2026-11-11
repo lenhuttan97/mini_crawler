@@ -18,9 +18,9 @@
 ## Worker features
 
 - [Search](features/search.md) — provider discovery và normalized result sets; không auto-crawl.
-- [Web Crawl](features/web-crawl.md) — fetch, browser fallback, extraction, classification, document persistence và static image candidates.
-- [Image Download](features/image-download.md) — direct image URL hoặc page-driven static image discovery, validation, quotas và manifests.
-- [Video Download](features/video-download.md) — direct approved source hoặc page-driven approved recipe, DRM gate và controlled `.mp4`/`.m3u8` download.
+- [Web Crawl](features/web-crawl.md) — fetch, extraction, classification, document persistence và static image candidates. MVP v1 is static fetch only; browser fallback is post-MVP v1.
+- [Image Download](features/image-download.md) — direct image URL hoặc page-driven static image discovery, validation, quotas và manifests (v1.1).
+- [Video Download](features/video-download.md) — direct approved source hoặc page-driven approved recipe, DRM gate và controlled `.mp4`/`.m3u8` download (v1.2).
 - [Document Type Classification](document-classification.md) — taxonomy, signals, metadata và quality gates cho Web Crawl.
 
 ## Operations

@@ -14,7 +14,11 @@ from app.features.web_crawl.application.service import CrawlService
 from app.features.web_crawl.infrastructure.static_fetcher import StaticFetcher
 from app.platform.asset_storage.local import LocalStorageAdapter
 from app.platform.asset_storage.storage import StorageAdapter
-from app.platform.document_storage.service import PersistenceService
+from app.platform.document_storage.service import (
+    PersistenceService,
+    confirm_pending_document_uploads,
+    rollback_pending_document_uploads,
+)
 from app.platform.job_orchestration.service import JobService
 from app.platform.network_policy.policy import PolicyGate
 from app.platform.persistence.enums import JobStatus
@@ -51,6 +55,7 @@ def process_crawl_job(session: Session, job_id: str, crawl_service=None) -> str 
         )
         job.status = JobStatus.COMPLETED.value
     except Exception:  # noqa: BLE001
+        rollback_pending_document_uploads(session)
         job.status = JobStatus.FAILED.value
     session.flush()
     return job.id
@@ -94,9 +99,11 @@ def execute_crawl_job(
             crawl_service=crawl_service_factory(session),
         )
         session.commit()
+        confirm_pending_document_uploads(session)
         return result
     except Exception:
         session.rollback()
+        rollback_pending_document_uploads(session)
         raise
     finally:
         session.close()

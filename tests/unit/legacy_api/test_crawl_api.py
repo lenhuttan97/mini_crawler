@@ -36,7 +36,10 @@ class _FakeCrawlJobSubmitter:
 def test_create_crawl_job_returns_pending_job_id_without_fetching() -> None:
     """The request creates/enqueues a job and never performs a crawl inline."""
     submitter = _FakeCrawlJobSubmitter()
-    app = create_app(crawl_job_submitter=submitter)
+    app = create_app(
+        crawl_job_submitter=submitter,
+        settings=Settings(_env_file=None),
+    )
 
     with TestClient(app) as client:
         response = client.post(
@@ -58,7 +61,7 @@ def test_create_crawl_job_returns_pending_job_id_without_fetching() -> None:
 
 def test_app_composes_durable_crawl_submitter_from_settings(tmp_path) -> None:
     """Production factory supplies the durable submitter without a test fake."""
-    app = create_app(Settings(database_url=f"sqlite:///{tmp_path / 'api.db'}"))
+    app = create_app(Settings(database_url=f"sqlite:///{tmp_path / 'api.db'}", _env_file=None))
 
     assert isinstance(app.state.crawl_job_submitter, CrawlJobSubmitter)
 

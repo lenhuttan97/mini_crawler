@@ -44,9 +44,12 @@ Sau khi crawl một URL được phép, hệ thống gán **một `document_type
 | `blog_article`/`book_chapter` | title, author nếu có, section headings, body |
 | `listing_page`/`navigation_page`/`media_page` | title, canonical URL, classification reason; chỉ lưu body khi policy cho phép |
 
+Nguồn metadata cho bài viết: JSON-LD Article-family → Open Graph/meta → DOM. Nếu nguồn ưu tiên cao nhất có nhiều giá trị mâu thuẫn cho cùng field, field đó để trống (không fallback, không suy đoán). Chỉ lưu field thực có; author/date/section thiếu hoặc không parse được thì bỏ trống.
+
 ## 5. Ranh giới và quality gate
 
 - Classification không thay thế Policy Gate, SSRF/redirect validation hoặc quyền nội dung.
+- Nội dung không đủ (dưới 200 ký tự không khoảng trắng hoặc dưới hai text block) không được phân loại là bài báo từ URL; fallback `generic_page`/`unknown`, confidence `low`, `needs_review=true`.
 - Không dùng type để tự động crawl link con, download media hoặc thực thi action browser.
 - Không log raw HTML, cookie, token hoặc URL query nhạy cảm làm classification evidence.
 - Dùng fixture HTML/JSON-LD do team kiểm soát; không cần gọi website bên ngoài trong unit/integration test.

@@ -29,7 +29,7 @@ def test_settings_production_requires_secret(monkeypatch: pytest.MonkeyPatch) ->
     monkeypatch.delenv("APP_SECRET_KEY", raising=False)
 
     with pytest.raises(ValueError, match="APP_SECRET_KEY"):
-        _import_settings().Settings()
+        _import_settings().Settings(_env_file=None)
 
 
 def test_settings_applies_profile_defaults(monkeypatch: pytest.MonkeyPatch) -> None:

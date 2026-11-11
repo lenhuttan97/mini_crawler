@@ -96,3 +96,33 @@ def test_classification_always_has_type_confidence_reason() -> None:
     assert result.document_type
     assert result.confidence in ("high", "medium", "low")
     assert result.classification_reason
+
+
+def test_insufficient_content_is_not_classified_as_news() -> None:
+    """Nội dung không đủ chất lượng không được coi là news dù URL có /news/."""
+    classifier = DocumentClassifier()
+    result = classifier.classify(
+        title="Bài ngắn",
+        url="https://example.com/news/bai-ngan",
+        html="<html><body><article>Đoạn rất ngắn.</article></body></html>",
+        json_ld={"@type": "NewsArticle"},
+        content_is_sufficient=False,
+    )
+    assert result.document_type == "generic_page"
+    assert result.confidence == "low"
+    assert result.needs_review is True
+
+
+def test_insufficient_and_empty_content_is_unknown() -> None:
+    """Nội dung không đủ và không còn text => unknown, cần review."""
+    classifier = DocumentClassifier()
+    result = classifier.classify(
+        title=None,
+        url="https://example.com/news/x",
+        html="",
+        json_ld={"@type": "NewsArticle"},
+        content_is_sufficient=False,
+    )
+    assert result.document_type == "unknown"
+    assert result.confidence == "low"
+    assert result.needs_review is True
