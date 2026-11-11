@@ -15,6 +15,7 @@ from sqlalchemy import (
     DateTime,
     Integer,
     String,
+    Text,
     UniqueConstraint,
     func,
 )
@@ -87,8 +88,15 @@ class Document(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
     canonical_url: Mapped[str] = mapped_column(String(2048), nullable=False, index=True)
     title: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    authors: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    section: Mapped[str | None] = mapped_column(String(256), nullable=True)
+    language: Mapped[str | None] = mapped_column(String(35), nullable=True)
     content_hash: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
     markdown_key: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    article_html_key: Mapped[str | None] = mapped_column(String(512), nullable=True)
     document_type: Mapped[str | None] = mapped_column(String(40), nullable=True)
     confidence: Mapped[str | None] = mapped_column(String(16), nullable=True)
     classification_reason: Mapped[str | None] = mapped_column(String(128), nullable=True)
