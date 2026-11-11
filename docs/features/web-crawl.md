@@ -4,9 +4,11 @@
 
 The shipped path is Policy Gate → job → static fetch → normalize → classify → persist a document. It does not expose a durable media-candidate workflow yet.
 
+Normalization selects one content root (`article`, then `main`, then `[role="main"]`, then `body`) and persists only that cleaned article HTML/Markdown. Article metadata is stored as nullable facts: JSON-LD first, then Open Graph/meta, then DOM; if a selected source provides conflicting values, the field stays unset rather than falling back or being inferred.
+
 ## Target architecture
 
-Web Crawl returns one `Document` with canonical URL, clean HTML/Markdown, content hash, one `document_type`, confidence/reason and `needs_review`. An explicit `extract_images` workflow may additionally retain an `ImageCandidateManifest` owned by Crawl Data. Classification never creates download jobs, and `media_page` is only a classification label.
+Web Crawl returns one `Document` with canonical URL, selected article HTML/Markdown, content hash, nullable article metadata, one `document_type`, confidence/reason and `needs_review`. An explicit `extract_images` workflow may additionally retain an `ImageCandidateManifest` owned by Crawl Data. Classification never creates download jobs, and `media_page` is only a classification label.
 
 ## After MVP
 
@@ -73,8 +75,8 @@ app/features/web_crawl/
 2. `NetworkPolicyService` gates initial URL.
 3. Static HTTP fetch streams bytes under timeout/type/size limit; every redirect is policy-revalidated.
 4. Browser fallback runs only when static content is insufficient and a reviewed server-side recipe permits it.
-5. Processing extracts clean HTML/Markdown, canonical URL and one document classification with confidence/reason.
-6. `DocumentStorageService` deduplicates by canonical URL/content hash and persists result.
+5. Processing selects one content root, removes page chrome, extracts nullable article metadata under the stated source precedence, and assigns one document classification with confidence/reason. A body with fewer than 200 non-whitespace characters or fewer than two text blocks is reported as insufficient instead of being classified from URL alone.
+6. `DocumentStorageService` deduplicates by canonical URL/content hash and persists the selected article HTML/Markdown plus nullable metadata; uploaded objects are deleted if the owning transaction fails.
 7. Commit outbox result, then acknowledge delivery.
 
 The job payload cannot contain browser JavaScript, selectors, cookies or credentials. Web Crawl does not create Image or Video jobs from discovered links.
