@@ -82,7 +82,18 @@ class DocumentClassifier:
         html: str,
         json_ld: dict | list | None,
         caller_hint: str | None = None,
+        content_is_sufficient: bool = True,
     ) -> ClassificationResult:
+        # Nội dung trích xuất không đủ: không dùng metadata/URL để đoán bài báo.
+        if not content_is_sufficient:
+            text = re.sub(r"<[^>]+>", "", html or "")
+            return ClassificationResult(
+                document_type="generic_page" if text.strip() else "unknown",
+                confidence="low",
+                classification_reason="insufficient_content",
+                needs_review=True,
+            )
+
         # Ưu tiên 1: structured metadata (JSON-LD / Open Graph).
         result = self._from_structured_metadata(json_ld)
         if result is not None:

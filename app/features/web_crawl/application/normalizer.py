@@ -225,20 +225,14 @@ def _json_ld_authors(items: list[dict]) -> tuple[bool, tuple[str, ...]]:
 
 
 def _json_ld_datetime(items: list[dict], key: str) -> tuple[bool, datetime | None]:
-    values = {
-        parsed
-        for item in items
-        if (parsed := _parse_datetime(item.get(key))) is not None
-    }
+    values = {parsed for item in items if (parsed := _parse_datetime(item.get(key))) is not None}
     if len(values) > 1:
         return True, None
     return (True, values.pop()) if values else (False, None)
 
 
 def _author_names(value) -> tuple[str, ...]:
-    if isinstance(value, str):
-        value = [value]
-    elif isinstance(value, dict):
+    if isinstance(value, (str, dict)):
         value = [value]
     if not isinstance(value, list):
         return ()
@@ -255,7 +249,7 @@ def _parse_datetime(value) -> datetime | None:
     if not isinstance(value, str) or not value.strip():
         return None
     try:
-        parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(value.strip())
     except ValueError:
         return None
     return parsed if parsed.tzinfo is not None else None
@@ -306,9 +300,7 @@ def _canonical_url(parser: HTMLParser, base_url: str) -> str | None:
 
 
 def _fallback_authors(parser: HTMLParser, root) -> tuple[str, ...]:
-    meta_author = _clean_text(
-        _attribute(parser.css_first('meta[name="author"]'), "content")
-    )
+    meta_author = _clean_text(_attribute(parser.css_first('meta[name="author"]'), "content"))
     if meta_author:
         return (meta_author,)
     for selector in ('[rel="author"]', ".author", ".byline"):

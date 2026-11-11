@@ -63,8 +63,9 @@ class CrawlService:
             title=normalized.title,
             url=normalized.canonical_url or url,
             html=normalized.clean_html,
-            json_ld=None,
+            json_ld=normalized.json_ld,
             caller_hint=None,
+            content_is_sufficient=normalized.content_is_sufficient,
         )
 
         # 6. Lưu document (dedupe theo content_hash) và liên kết job.
@@ -80,6 +81,12 @@ class CrawlService:
             confidence=classification.confidence,
             classification_reason=classification.classification_reason,
             needs_review=classification.needs_review,
+            summary=normalized.summary,
+            authors=normalized.authors,
+            published_at=normalized.published_at,
+            updated_at=normalized.updated_at,
+            section=normalized.section,
+            language=normalized.language,
         )
 
         return {

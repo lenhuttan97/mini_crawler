@@ -176,15 +176,19 @@ MALFORMED_JSON_LD_HTML = """<!DOCTYPE html>
 </body>
 </html>"""
 
-ONE_LONG_PARAGRAPH_HTML = """<!DOCTYPE html>
+ONE_LONG_PARAGRAPH_HTML = (
+    """<!DOCTYPE html>
 <html lang="vi">
 <head><title>Một đoạn</title></head>
 <body>
     <article>
-        <p>""" + ("Nội dung dài nhưng chỉ nằm trong một đoạn văn duy nhất. " * 6) + """</p>
+        <p>"""
+    + ("Nội dung dài nhưng chỉ nằm trong một đoạn văn duy nhất. " * 6)
+    + """</p>
     </article>
 </body>
 </html>"""
+)
 
 
 def test_extract_title_and_canonical() -> None:
@@ -222,9 +226,7 @@ def test_structured_metadata_takes_precedence() -> None:
     assert doc.title == "Tiêu đề JSON-LD"
     assert doc.summary == "Tóm tắt JSON-LD."
     assert doc.authors == ("Nguyễn Văn A", "Trần Thị B")
-    assert doc.published_at == datetime(
-        2026, 11, 8, 9, 30, tzinfo=timezone(timedelta(hours=7))
-    )
+    assert doc.published_at == datetime(2026, 11, 8, 9, 30, tzinfo=timezone(timedelta(hours=7)))
     assert doc.updated_at == datetime(2026, 11, 9, 10, 0, tzinfo=UTC)
     assert doc.section == "Kinh tế"
     assert doc.language == "vi"
